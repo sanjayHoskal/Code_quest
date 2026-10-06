@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Level - CodeQuest</title>
+    <link rel="stylesheet" href="/static/css/theme.css">
+    <script src="/static/js/sound_effects.js"></script>
+    <style>
+        .levels-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 22px;
+            margin-top: 30px;
+        }
+        .level-card {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-lg);
+            padding: 30px 22px;
+            text-align: center;
+            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+        }
+        .level-card:hover {
+            transform: translateY(-7px);
+            background: rgba(255, 255, 255, 1);
+            box-shadow: 0 16px 36px -10px var(--primary-glow);
+            border-color: rgba(99, 102, 241, 0.5);
+        }
+        .level-badge {
+            width: 58px;
+            height: 58px;
+            margin: 0 auto 15px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-heading);
+            font-size: 24px;
+            font-weight: 800;
+            background: rgba(99, 102, 241, 0.15);
+            border: 2px solid rgba(99, 102, 241, 0.4);
+            color: var(--text-primary);
+        }
+        .master-card {
+            grid-column: 1 / -1;
+            background: radial-gradient(circle at center, rgba(245, 158, 11, 0.12) 0%, rgba(255, 255, 255, 0.9) 100%);
+            border: 2px solid rgba(245, 158, 11, 0.45);
+            margin-top: 10px;
+        }
+        .master-card:hover {
+            border-color: #f59e0b;
+            box-shadow: 0 18px 45px -10px rgba(245, 158, 11, 0.45);
+        }
+        .context-pills {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+        .ctx-pill {
+            background: rgba(99, 102, 241, 0.15);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            color: var(--text-primary);
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="app-nav">
+        <a href="/" class="brand">
+            <span class="brand-icon">🎮</span>
+            <div>
+                <h1 class="brand-title">CodeQuest</h1>
+                <p class="brand-subtitle">Level Up Your Code</p>
+            </div>
+        </a>
+        <div class="nav-actions">
+
+            <a href="/difficulty?language={{ language }}&game_mode={{ game_mode }}" class="nav-pill">⬅️ Difficulty</a>
+            <a href="/" class="nav-pill">🏠 Home</a>
+            <a href="/leaderboard" class="nav-pill nav-pill-warning">🏆 Leaderboard</a>
+        </div>
+    </nav>
+
+    <div class="glass-container glass-container-hero">
+        <div style="text-align: center; margin-bottom: 30px;">
+            <div class="context-pills">
+                <span class="ctx-pill">Track: <strong>{{ language }}</strong></span>
+                <span class="ctx-pill">Mode: <strong>{{ game_mode }}</strong></span>
+                <span class="ctx-pill">Tier: <strong>{{ difficulty }}</strong></span>
+            </div>
+            <h2 class="gradient-title" style="font-size: 34px; margin-bottom: 8px;">Select Quest Level</h2>
+            <p class="subtitle">Complete each tier step-by-step or unlock the Master Challenge to demonstrate supreme algorithmic fluency.</p>
+        </div>
+
+        <div class="levels-grid">
+
+            <!-- Level 1 -->
+            <div class="level-card">
+                <div>
+                    <div class="level-badge">1</div>
+                    <h3 style="font-size: 20px; margin-bottom: 6px;">Level 1: Fundamentals</h3>
+                    <p style="color: var(--text-secondary); font-size: 14px; margin-bottom: 20px;">
+                        Basic construct flow, variable scope, arithmetic, and standard patterns.
+                    </p>
+                </div>
+                <form action="/challenge" method="POST">
+                    <input type="hidden" name="language" value="{{ language }}">
+                    <input type="hidden" name="game_mode" value="{{ game_mode }}">
+                    <input type="hidden" name="difficulty" value="{{ difficulty }}">
+                    <input type="hidden" name="level" value="1">
+                    <button type="submit" class="btn-primary">Enter Level 1 ➔</button>
+                </form>
+            </div>
+
+            <!-- Level 2 -->
+            <div class="level-card {% if unlocked_level < 2 %}locked{% endif %}" {% if unlocked_level < 2 %}style="opacity: 0.6; pointer-events: none;"{% endif %}>
+                <div>
+                    <div class="level-badge" style="border-color: rgba(6, 182, 212, 0.4); color: #22d3ee; background: rgba(6, 182, 212, 0.15);">2</div>
+                    <h3 style="font-size: 20px; margin-bottom: 6px;">Level 2: Intermediate</h3>
+                    <p style="color: var(--text-secondary); font-size: 14px; margin-bottom: 20px;">
+                        Logic branching, sequence manipulations, formatting, and standard libraries.
+                    </p>
+                </div>
+                {% if unlocked_level < 2 %}
+                    <button type="button" class="btn-primary" style="background: rgba(0,0,0,0.05); color: #94a3b8; cursor: not-allowed;">🔒 Locked</button>
+                {% else %}
+                <form action="/challenge" method="POST">
+                    <input type="hidden" name="language" value="{{ language }}">
+                    <input type="hidden" name="game_mode" value="{{ game_mode }}">
+                    <input type="hidden" name="difficulty" value="{{ difficulty }}">
+                    <input type="hidden" name="level" value="2">
+                    <button type="submit" class="btn-primary" style="background: linear-gradient(135deg, #0284c7, #2563eb);">Enter Level 2 ➔</button>
+                </form>
+                {% endif %}
+            </div>
+
+            <!-- Level 3 -->
+            <div class="level-card {% if unlocked_level < 3 %}locked{% endif %}" {% if unlocked_level < 3 %}style="opacity: 0.6; pointer-events: none;"{% endif %}>
+                <div>
+                    <div class="level-badge" style="border-color: rgba(16, 185, 129, 0.4); color: #34d399; background: rgba(16, 185, 129, 0.15);">3</div>
+                    <h3 style="font-size: 20px; margin-bottom: 6px;">Level 3: Advanced Logic</h3>
+                    <p style="color: var(--text-secondary); font-size: 14px; margin-bottom: 20px;">
+                        Complex expressions, higher-order routines, edge conditions, and error traps.
+                    </p>
+                </div>
+                {% if unlocked_level < 3 %}
+                    <button type="button" class="btn-primary" style="background: rgba(0,0,0,0.05); color: #94a3b8; cursor: not-allowed;">🔒 Locked</button>
+                {% else %}
+                <form action="/challenge" method="POST">
+                    <input type="hidden" name="language" value="{{ language }}">
+                    <input type="hidden" name="game_mode" value="{{ game_mode }}">
+                    <input type="hidden" name="difficulty" value="{{ difficulty }}">
+                    <input type="hidden" name="level" value="3">
+                    <button type="submit" class="btn-primary" style="background: linear-gradient(135deg, #059669, #0d9488);">Enter Level 3 ➔</button>
+                </form>
+                {% endif %}
+            </div>
+
+            <!-- Master Challenge -->
+            <div class="level-card master-card {% if unlocked_level < 4 %}locked{% endif %}" {% if unlocked_level < 4 %}style="opacity: 0.6; pointer-events: none;"{% endif %}>
+                <div style="max-width: 600px; margin: 0 auto 20px;">
+                    <div style="font-size: 40px; margin-bottom: 8px;">👑</div>
+                    <h3 style="font-size: 26px; color: #fbbf24; margin-bottom: 8px;">Level 4: Master Challenge</h3>
+                    <p style="color: var(--text-secondary); font-size: 15px; line-height: 1.6;">
+                        The ultimate test of precision! Tackle production-level snippets, advanced optimizations, subqueries, and multi-tier edge cases.
+                    </p>
+                </div>
+                <div style="max-width: 320px; margin: 0 auto; width: 100%;">
+                    {% if unlocked_level < 4 %}
+                        <button type="button" class="btn-primary" style="background: rgba(0,0,0,0.05); color: #94a3b8; cursor: not-allowed; border: 1px solid rgba(255,255,255,0.1);">
+                            🔒 Master Locked
+                        </button>
+                    {% else %}
+                    <form action="/challenge" method="POST">
+                        <input type="hidden" name="language" value="{{ language }}">
+                        <input type="hidden" name="game_mode" value="{{ game_mode }}">
+                        <input type="hidden" name="difficulty" value="{{ difficulty }}">
+                        <input type="hidden" name="level" value="Master">
+                        <button type="submit" class="btn-primary" style="background: linear-gradient(135deg, #f59e0b, #d97706); box-shadow: 0 10px 25px -5px rgba(245, 158, 11, 0.5);">
+                            Conquer Master Level 👑
+                        </button>
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Game Mode - CodeQuest</title>
+    <link rel="stylesheet" href="/static/css/theme.css">
+    <script src="/static/js/sound_effects.js"></script>
+    <style>
+        .mode-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+            gap: 22px;
+            margin-top: 30px;
+        }
+        .mode-card {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-lg);
+            padding: 30px 22px;
+            text-align: center;
+            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+        }
+        .mode-card:hover {
+            transform: translateY(-7px);
+            background: rgba(255, 255, 255, 1);
+            box-shadow: 0 18px 36px -10px var(--primary-glow);
+            border-color: rgba(99, 102, 241, 0.45);
+        }
+        .mode-icon {
+            font-size: 44px;
+            margin-bottom: 12px;
+            display: inline-block;
+            transition: transform 0.3s ease;
+        }
+        .mode-card:hover .mode-icon {
+            transform: scale(1.15);
+        }
+        .mode-card h2 {
+            font-size: 20px;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+        .mode-card p {
+            color: var(--text-secondary);
+            font-size: 14px;
+            line-height: 1.5;
+            min-height: 44px;
+            margin-bottom: 20px;
+        }
+        .track-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(99, 102, 241, 0.15);
+            color: var(--text-primary);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            padding: 4px 14px;
+            border-radius: var(--radius-full);
+            font-size: 13px;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="app-nav">
+        <a href="/" class="brand">
+            <span class="brand-icon">🎮</span>
+            <div>
+                <h1 class="brand-title">CodeQuest</h1>
+                <p class="brand-subtitle">Level Up Your Code</p>
+            </div>
+        </a>
+        <div class="nav-actions">
+
+            <a href="/language" class="nav-pill">⬅️ Tracks</a>
+            <a href="/" class="nav-pill">🏠 Home</a>
+            <a href="/leaderboard" class="nav-pill nav-pill-warning">🏆 Leaderboard</a>
+        </div>
+    </nav>
+
+    <div class="glass-container glass-container-hero">
+        <div style="text-align: center; margin-bottom: 30px;">
+            <div style="margin-bottom: 12px;">
+                <span class="track-badge">🎯 Active Track: <strong>{{ language }}</strong></span>
+            </div>
+            <h2 class="gradient-title" style="font-size: 34px; margin-bottom: 8px;">Select Your Game Mode</h2>
+            <p class="subtitle">Pick a training format tailored to your focus: reordering blocks, debugging bugs, validating syntax, or output prediction.</p>
+        </div>
+
+        <div class="mode-grid">
+
+            <!-- 1. Drag & Drop -->
+            <div class="mode-card">
+                <div>
+                    <span class="mode-icon">🧩</span>
+                    <h2>Drag & Drop</h2>
+                    <p>Arrange scrambled code blocks into logical executable order.</p>
+                </div>
+                <form action="/difficulty" method="POST">
+                    <input type="hidden" name="game_mode" value="Drag & Drop">
+                    <input type="hidden" name="language" value="{{ language }}">
+                    <button type="submit" class="btn-primary" style="background: linear-gradient(135deg, #6366f1, #4f46e5);">Play Mode ➔</button>
+                </form>
+            </div>
+
+            <!-- 2. MCQ Challenge -->
+            <div class="mode-card">
+                <div>
+                    <span class="mode-icon">❓</span>
+                    <h2>MCQ Challenge</h2>
+                    <p>Rapid-fire multiple choice conceptual and algorithmic questions.</p>
+                </div>
+                <form action="/difficulty" method="POST">
+                    <input type="hidden" name="game_mode" value="MCQ Challenge">
+                    <input type="hidden" name="language" value="{{ language }}">
+                    <button type="submit" class="btn-primary" style="background: linear-gradient(135deg, #0284c7, #0369a1);">Play Mode ➔</button>
+                </form>
+            </div>
+
+            <!-- 3. Syntax Validator (True / False) -->
+            <div class="mode-card" style="border-color: rgba(245, 158, 11, 0.4); background: rgba(254, 252, 232, 0.9);">
+                <div>
+                    <span class="mode-icon">⚡</span>
+                    <span style="background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); font-size: 11px; padding: 2px 8px; border-radius: 6px; font-weight: 800; display: inline-block; margin-bottom: 6px;">NEW MODE</span>
+                    <h2>Syntax Validator</h2>
+                    <p>Determine whether tricky code statements and queries are True or False.</p>
+                </div>
+                <form action="/difficulty" method="POST">
+                    <input type="hidden" name="game_mode" value="Syntax Validator">
+                    <input type="hidden" name="language" value="{{ language }}">
+                    <button type="submit" class="btn-primary" style="background: linear-gradient(135deg, #d97706, #b45309);">Play Mode ➔</button>
+                </form>
+            </div>
+
+            <!-- 4. Debug the Code -->
+            <div class="mode-card">
+                <div>
+                    <span class="mode-icon">🐞</span>
+                    <h2>Debug the Code</h2>
+                    <p>Spot logical flaws, runtime exceptions, and type errors and fix them.</p>
+                </div>
+                <form action="/difficulty" method="POST">
+                    <input type="hidden" name="game_mode" value="Debug the Code">
+                    <input type="hidden" name="language" value="{{ language }}">
+                    <button type="submit" class="btn-primary" style="background: linear-gradient(135deg, #e11d48, #be123c);">Play Mode ➔</button>
+                </form>
+            </div>
+
+            <!-- 5. Predict the Output -->
+            <div class="mode-card">
+                <div>
+                    <span class="mode-icon">💡</span>
+                    <h2>Predict Output</h2>
+                    <p>Simulate execution mentally and determine exact console output.</p>
+                </div>
+                <form action="/difficulty" method="POST">
+                    <input type="hidden" name="game_mode" value="Predict the Output">
+                    <input type="hidden" name="language" value="{{ language }}">
+                    <button type="submit" class="btn-primary" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">Play Mode ➔</button>
+                </form>
+            </div>
+
+            <!-- 6. Fill in the Blanks -->
+            <div class="mode-card">
+                <div>
+                    <span class="mode-icon">⌨️</span>
+                    <h2>Fill in Blanks</h2>
+                    <p>Complete missing keywords, methods, and syntax operators in place.</p>
+                </div>
+                <form action="/difficulty" method="POST">
+                    <input type="hidden" name="game_mode" value="Fill in the Blanks">
+                    <input type="hidden" name="language" value="{{ language }}">
+                    <button type="submit" class="btn-primary" style="background: linear-gradient(135deg, #059669, #047857);">Play Mode ➔</button>
+                </form>
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+</html>

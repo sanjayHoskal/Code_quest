@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hero Setup - CodeQuest</title>
+    <link rel="stylesheet" href="/static/css/theme.css">
+    <script src="/static/js/sound_effects.js"></script>
+    <style>
+        .setup-card {
+            max-width: 480px;
+            margin: 60px auto;
+            background: var(--bg-card);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-lg);
+            padding: 45px 35px;
+            box-shadow: var(--shadow-card);
+            backdrop-filter: blur(20px);
+            text-align: center;
+        }
+        .setup-input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-md);
+            padding: 16px 20px;
+            font-size: 16px;
+            color: var(--text-primary);
+            margin: 20px 0 25px;
+            outline: none;
+            transition: all 0.25s ease;
+            text-align: center;
+        }
+        .setup-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary-glow);
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="app-nav">
+        <a href="/" class="brand">
+            <span class="brand-icon">🎮</span>
+            <div>
+                <h1 class="brand-title">CodeQuest</h1>
+                <p class="brand-subtitle">Level Up Your Code</p>
+            </div>
+        </a>
+        <div class="nav-actions">
+
+            <a href="/" class="nav-pill">🏠 Home</a>
+        </div>
+    </nav>
+
+    <div class="setup-card">
+        <div style="font-size: 52px; margin-bottom: 12px;">🧙‍♂️</div>
+        <h2 class="gradient-title" style="font-size: 32px; margin-bottom: 8px;">Claim Your Coder Handle</h2>
+        <p style="color: var(--text-secondary); font-size: 15px; margin: 0 auto; max-width: 380px;">
+            Choose a name to represent you across challenge leaderboards, achievements, and quest completions.
+        </p>
+
+        <form action="/language" method="POST">
+            <input type="text" name="player_name" class="setup-input" placeholder="e.g. NeoCoder, ByteKnight, AdaLover" required autofocus autocomplete="off">
+            <button type="submit" class="btn-primary" style="padding: 16px 32px; font-size: 17px;">
+                Begin Coding Adventure ➔
+            </button>
+        </form>
+    </div>
+
+</body>
+</html>

@@ -179,3 +179,4 @@ This project is released under the **MIT License**. See the `LICENSE` file for d
 For questions or feedback, open an issue in the repository or contact the project maintainer.
 
 ---
+*Created with Antigravity – your AI coding co-pilot.*

@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeQuest - Master Programming Through Gameplay</title>
+    <link rel="stylesheet" href="/static/css/theme.css">
+    <script src="/static/js/sound_effects.js"></script>
+    <style>
+        .hero-section {
+            text-align: center;
+            padding: 40px 20px 20px;
+        }
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(99, 102, 241, 0.15);
+            border: 1px solid rgba(99, 102, 241, 0.35);
+            color: var(--text-primary);
+            padding: 6px 18px;
+            border-radius: var(--radius-full);
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.2);
+        }
+        .hero-title {
+            font-size: 54px;
+            font-weight: 900;
+            line-height: 1.15;
+            margin-bottom: 18px;
+        }
+        .hero-subtitle {
+            font-size: 19px;
+            color: var(--text-secondary);
+            max-width: 720px;
+            margin: 0 auto 35px;
+            line-height: 1.6;
+        }
+        .stats-bar {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 30px 0 45px;
+            flex-wrap: wrap;
+        }
+        .stat-item {
+            text-align: center;
+            padding: 10px 20px;
+        }
+        .stat-num {
+            font-family: var(--font-heading);
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--text-primary);
+            display: block;
+        }
+        .stat-label {
+            font-size: 13px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+        .cta-group {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+        }
+        .track-showcase {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 22px;
+            margin-top: 20px;
+        }
+        .track-card {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-md);
+            padding: 28px 22px;
+            text-align: left;
+            transition: all 0.3s ease;
+        }
+        .track-card:hover {
+            transform: translateY(-6px);
+            background: rgba(255, 255, 255, 1);
+            border-color: rgba(99, 102, 241, 0.4);
+            box-shadow: 0 15px 30px -10px var(--primary-glow);
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="app-nav">
+        <a href="/" class="brand">
+            <span class="brand-icon">🎮</span>
+            <div>
+                <h1 class="brand-title">CodeQuest</h1>
+                <p class="brand-subtitle">Level Up Your Code</p>
+            </div>
+        </a>
+        <div class="nav-actions">
+
+            <a href="/leaderboard" class="nav-pill nav-pill-warning">🏆 Leaderboard</a>
+            {% if user %}
+                <a href="/profile" class="nav-pill">👤 {{ user.username }}</a>
+                {% if user.role == 'admin' %}
+                    <a href="/admin" class="nav-pill" style="border-color: rgba(59, 130, 246, 0.4); color: #60a5fa;">🛡️ Admin</a>
+                {% endif %}
+                <a href="/logout" class="nav-pill" style="border-color: rgba(239, 68, 68, 0.3); color: #f87171;">🚪 Logout</a>
+            {% else %}
+                <a href="/login" class="nav-pill">🔑 Sign In</a>
+                <a href="/register" class="nav-pill nav-pill-primary">📝 Register</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div style="max-width: 600px; margin: 20px auto 0; padding: 0 15px;">
+                {% for category, message in messages %}
+                    <div style="background: rgba(16, 185, 129, 0.2); border: 1px solid #10b981; color: #34d399; padding: 12px; border-radius: 8px; margin-bottom: 12px; text-align: center;">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <div class="hero-section">
+        {% if user %}
+            <h2 style="font-size: 28px; color: #38bdf8; margin-bottom: 15px;">Welcome, {{ user.username }}! 👋</h2>
+        {% endif %}
+        <div class="hero-badge">
+            🎮 Interactive Programming Quests & Algorithmic Challenges
+        </div>
+        <h1 class="hero-title">
+            Master Programming<br>
+            <span class="gradient-title">Through Addictive Gameplay</span>
+        </h1>
+        <p class="hero-subtitle">
+            Say goodbye to boring code tutorials. Level up through authentic syntax puzzles, bug hunts, block ordering, and dynamic output prediction across Python, Java, and SQL.
+        </p>
+
+        <div class="cta-group">
+            {% if user %}
+                <a href="/player" class="btn-primary" style="width: auto; padding: 16px 36px; font-size: 18px;">
+                    🚀 Continue Quest ➔
+                </a>
+            {% else %}
+                <a href="/start_game" class="btn-primary" style="width: auto; padding: 16px 36px; font-size: 18px;">
+                    🚀 Quick Play (No Login) ➔
+                </a>
+                <a href="/register" class="btn-secondary" style="padding: 16px 32px; font-size: 16px;">
+                    ⭐ Create Account & Save XP
+                </a>
+            {% endif %}
+        </div>
+
+        <div class="stats-bar">
+            <div class="stat-item">
+                <span class="stat-num" style="color: #38bdf8;">3</span>
+                <span class="stat-label">Core Tracks (Py, Java, SQL)</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-num" style="color: var(--text-primary);">6</span>
+                <span class="stat-label">Unique Game Modes</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-num" style="color: #34d399;">1,860+</span>
+                <span class="stat-label">Authentic Questions</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-num" style="color: #fbbf24;">4</span>
+                <span class="stat-label">Skill Tiers (to Master)</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="glass-container glass-container-hero" style="margin-top: 0;">
+        <h2 style="font-size: 26px; text-align: center; margin-bottom: 25px;">
+            Choose Your Track & Jump Straight In
+        </h2>
+
+        <div class="track-showcase">
+            <div class="track-card">
+                <div style="font-size: 38px; margin-bottom: 12px;">🐍</div>
+                <h3 style="font-size: 20px; margin-bottom: 6px;">Python Mastery</h3>
+                <p style="color: var(--text-secondary); font-size: 14px; margin-bottom: 20px;">
+                    Comprehensions, slicing, f-strings, lambda scopes, generators, type hints, and decorators.
+                </p>
+                <form action="/start_game" method="POST">
+                    <input type="hidden" name="language" value="Python">
+                    <button type="submit" class="btn-primary" style="background: linear-gradient(135deg, #0284c7, #2563eb);">Start Python ➔</button>
+                </form>
+            </div>
+
+            <div class="track-card">
+                <div style="font-size: 38px; margin-bottom: 12px;">☕</div>
+                <h3 style="font-size: 20px; margin-bottom: 6px;">Java Engineering</h3>
+                <p style="color: var(--text-secondary); font-size: 14px; margin-bottom: 20px;">
+                    OOP hierarchies, static vs instance scope, stream filters, records, generics, and pattern matching.
+                </p>
+                <form action="/start_game" method="POST">
+                    <input type="hidden" name="language" value="Java">
+                    <button type="submit" class="btn-primary" style="background: linear-gradient(135deg, #ea580c, #c026d3);">Start Java ➔</button>
+                </form>
+            </div>
+
+            <div class="track-card">
+                <div style="font-size: 38px; margin-bottom: 12px;">🗄️</div>
+                <h3 style="font-size: 20px; margin-bottom: 6px;">SQL Database Querying</h3>
+                <p style="color: var(--text-secondary); font-size: 14px; margin-bottom: 20px;">
+                    Aggregations, group filtering (WHERE vs HAVING), joins, CTEs, subqueries, and window functions.
+                </p>
+                <form action="/start_game" method="POST">
+                    <input type="hidden" name="language" value="SQL">
+                    <button type="submit" class="btn-primary" style="background: linear-gradient(135deg, #059669, #0d9488);">Start SQL ➔</button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>

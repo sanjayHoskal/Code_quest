@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hall of Fame - CodeQuest Leaderboard</title>
+    <link rel="stylesheet" href="/static/css/theme.css">
+    <script src="/static/js/sound_effects.js"></script>
+    <style>
+        .leaderboard-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 10px;
+            margin-top: 25px;
+        }
+        .leaderboard-table th {
+            padding: 12px 18px;
+            text-align: left;
+            color: var(--text-muted);
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            border: none;
+        }
+        .leaderboard-table td {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 16px 20px;
+            color: var(--text-primary);
+            border-top: 1px solid var(--border-glass);
+            border-bottom: 1px solid var(--border-glass);
+            transition: all 0.25s ease;
+        }
+        .leaderboard-table tr td:first-child {
+            border-left: 1px solid var(--border-glass);
+            border-top-left-radius: 12px;
+            border-bottom-left-radius: 12px;
+            text-align: center;
+            width: 60px;
+        }
+        .leaderboard-table tr td:last-child {
+            border-right: 1px solid var(--border-glass);
+            border-top-right-radius: 12px;
+            border-bottom-right-radius: 12px;
+            text-align: right;
+        }
+        .leaderboard-table tr:hover td {
+            background: rgba(255, 255, 255, 1);
+            border-color: rgba(99, 102, 241, 0.35);
+            transform: translateY(-2px);
+        }
+        .rank-badge {
+            font-family: var(--font-heading);
+            font-weight: 800;
+            font-size: 18px;
+        }
+        .rank-1 { color: #fbbf24; text-shadow: 0 0 15px rgba(251, 191, 36, 0.5); }
+        .rank-2 { color: #cbd5e1; text-shadow: 0 0 12px rgba(203, 213, 225, 0.4); }
+        .rank-3 { color: #d97706; text-shadow: 0 0 12px rgba(217, 119, 6, 0.4); }
+        
+        .score-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(245, 158, 11, 0.15);
+            border: 1px solid rgba(245, 158, 11, 0.35);
+            color: #fbbf24;
+            padding: 6px 14px;
+            border-radius: var(--radius-full);
+            font-weight: 800;
+            font-size: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="app-nav">
+        <a href="/" class="brand">
+            <span class="brand-icon">🎮</span>
+            <div>
+                <h1 class="brand-title">CodeQuest</h1>
+                <p class="brand-subtitle">Level Up Your Code</p>
+            </div>
+        </a>
+        <div class="nav-actions">
+
+            <a href="/" class="nav-pill">🏠 Home</a>
+            <a href="/start_game" class="nav-pill nav-pill-primary">🚀 Play Quest</a>
+        </div>
+    </nav>
+
+    <div class="glass-container">
+        <div style="text-align: center; margin-bottom: 25px;">
+            <div style="font-size: 46px; margin-bottom: 8px;">🏆</div>
+            <h2 class="gradient-title" style="font-size: 34px; margin-bottom: 8px;">Global Leaderboard</h2>
+            <p class="subtitle">The top programming champions who conquered the most algorithmic levels and scored highest XP.</p>
+        </div>
+
+        <table class="leaderboard-table">
+            <thead>
+                <tr>
+                    <th style="text-align: center;">Rank</th>
+                    <th>Hero Coder</th>
+                    <th style="text-align: right;">Total XP</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for score in top_scores %}
+                <tr>
+                    <td>
+                        <span class="rank-badge {% if loop.index == 1 %}rank-1{% elif loop.index == 2 %}rank-2{% elif loop.index == 3 %}rank-3{% endif %}">
+                            {% if loop.index == 1 %}🥇{% elif loop.index == 2 %}🥈{% elif loop.index == 3 %}🥉{% else %}#{{ loop.index }}{% endif %}
+                        </span>
+                    </td>
+                    <td>
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <span style="font-size: 22px;">👾</span>
+                            <span style="font-weight: 700; font-size: 16px;">{{ score.player_name }}</span>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="score-pill">⭐ {{ score.score }} XP</span>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="3" style="text-align: center; padding: 40px; color: var(--text-secondary);">
+                        No champions recorded yet! Be the first to embark on a quest and claim the #1 spot!
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div style="text-align: center; margin-top: 35px;">
+            <a href="/start_game" class="btn-primary" style="width: auto; padding: 14px 32px;">
+                ⚔️ Embark on Quest & Earn XP ➔
+            </a>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Difficulty - CodeQuest</title>
+    <link rel="stylesheet" href="/static/css/theme.css">
+    <script src="/static/js/sound_effects.js"></script>
+    <style>
+        .diff-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+        .diff-card {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-lg);
+            padding: 35px 25px;
+            text-align: center;
+            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+        }
+        .diff-card:hover {
+            transform: translateY(-8px);
+            background: rgba(255, 255, 255, 1);
+        }
+        .card-beginner:hover {
+            border-color: rgba(16, 185, 129, 0.5);
+            box-shadow: 0 16px 36px -10px rgba(16, 185, 129, 0.4);
+        }
+        .card-intermediate:hover {
+            border-color: rgba(245, 158, 11, 0.5);
+            box-shadow: 0 16px 36px -10px rgba(245, 158, 11, 0.4);
+        }
+        .card-advanced:hover {
+            border-color: rgba(239, 68, 68, 0.5);
+            box-shadow: 0 16px 36px -10px rgba(239, 68, 68, 0.4);
+        }
+        .diff-icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+            display: inline-block;
+        }
+        .metric-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin: 10px 0 20px;
+        }
+        .context-pills {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+        .ctx-pill {
+            background: rgba(99, 102, 241, 0.15);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            color: var(--text-primary);
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="app-nav">
+        <a href="/" class="brand">
+            <span class="brand-icon">🎮</span>
+            <div>
+                <h1 class="brand-title">CodeQuest</h1>
+                <p class="brand-subtitle">Level Up Your Code</p>
+            </div>
+        </a>
+        <div class="nav-actions">
+
+            <a href="/start_game?language={{ language }}" class="nav-pill">⬅️ Modes</a>
+            <a href="/" class="nav-pill">🏠 Home</a>
+            <a href="/leaderboard" class="nav-pill nav-pill-warning">🏆 Leaderboard</a>
+        </div>
+    </nav>
+
+    <div class="glass-container">
+        <div style="text-align: center; margin-bottom: 30px;">
+            <div class="context-pills">
+                <span class="ctx-pill">Track: <strong>{{ language }}</strong></span>
+                <span class="ctx-pill">Mode: <strong>{{ game_mode }}</strong></span>
+            </div>
+            <h2 class="gradient-title" style="font-size: 34px; margin-bottom: 8px;">Select Difficulty Tier</h2>
+            <p class="subtitle">Choose your challenge intensity. Higher tiers test advanced abstractions, edge cases, and complex algorithmic behavior.</p>
+        </div>
+
+        <div class="diff-grid">
+
+            <!-- Beginner -->
+            <div class="diff-card card-beginner">
+                <div>
+                    <span class="diff-icon">🌱</span>
+                    <h3 style="font-size: 24px; margin-bottom: 8px; color: #34d399;">Beginner</h3>
+                    <div class="metric-pill">⭐ +10 XP per Quest</div>
+                    <p style="color: var(--text-secondary); font-size: 14px; line-height: 1.6; margin-bottom: 25px;">
+                        Build core foundations, essential syntax, primitive types, basic loops, and straightforward operators.
+                    </p>
+                </div>
+                <form action="/level" method="POST">
+                    <input type="hidden" name="language" value="{{ language }}">
+                    <input type="hidden" name="game_mode" value="{{ game_mode }}">
+                    <input type="hidden" name="difficulty" value="Beginner">
+                    <button type="submit" class="btn-primary" style="background: linear-gradient(135deg, #10b981, #059669);">
+                        Start Beginner ➔
+                    </button>
+                </form>
+            </div>
+
+            <!-- Intermediate -->
+            <div class="diff-card card-intermediate">
+                <div>
+                    <span class="diff-icon">⚡</span>
+                    <h3 style="font-size: 24px; margin-bottom: 8px; color: #fbbf24;">Intermediate</h3>
+                    <div class="metric-pill">⭐ +15 XP per Quest</div>
+                    <p style="color: var(--text-secondary); font-size: 14px; line-height: 1.6; margin-bottom: 25px;">
+                        Tackle multi-step reasoning, nested structures, collections, lambda expressions, and data handling.
+                    </p>
+                </div>
+                <form action="/level" method="POST">
+                    <input type="hidden" name="language" value="{{ language }}">
+                    <input type="hidden" name="game_mode" value="{{ game_mode }}">
+                    <input type="hidden" name="difficulty" value="Intermediate">
+                    <button type="submit" class="btn-primary" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+                        Start Intermediate ➔
+                    </button>
+                </form>
+            </div>
+
+            <!-- Advanced -->
+            <div class="diff-card card-advanced">
+                <div>
+                    <span class="diff-icon">🔥</span>
+                    <h3 style="font-size: 24px; margin-bottom: 8px; color: #f87171;">Advanced</h3>
+                    <div class="metric-pill">⭐ +25 XP per Quest</div>
+                    <p style="color: var(--text-secondary); font-size: 14px; line-height: 1.6; margin-bottom: 25px;">
+                        Master asynchronous patterns, generators, complex relational queries, memory optimization, and edge cases.
+                    </p>
+                </div>
+                <form action="/level" method="POST">
+                    <input type="hidden" name="language" value="{{ language }}">
+                    <input type="hidden" name="game_mode" value="{{ game_mode }}">
+                    <input type="hidden" name="difficulty" value="Advanced">
+                    <button type="submit" class="btn-primary" style="background: linear-gradient(135deg, #ef4444, #b91c1c);">
+                        Start Advanced ➔
+                    </button>
+                </form>
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+</html>

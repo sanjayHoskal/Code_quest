@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>CodeQuest Challenge</title>
+    <link rel="stylesheet" href="/static/css/theme.css">
+    <script src="/static/js/sound_effects.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=JetBrains+Mono:wght@400;700&display=swap');
+
+        :root {
+            --bg-dark: #f0f9ff;
+            --bg-card: rgba(255, 255, 255, 0.9);
+            --primary: #3b82f6;
+            --accent: #8b5cf6;
+            --success: #10b981;
+            --danger: #ef4444;
+            --text-main: #0f172a;
+            --text-muted: #475569;
+            --code-bg: #f8fafc;
+            --code-border: rgba(59, 130, 246, 0.3);
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Outfit', sans-serif;
+            background: radial-gradient(circle at top left, #e0f2fe, var(--bg-dark));
+            color: var(--text-main);
+            min-height: 100vh;
+        }
+
+        header {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            text-align: center;
+            padding: 20px;
+            position: relative;
+        }
+
+        .home-btn {
+            position: absolute;
+            left: 20px;
+            top: 25px;
+            background: rgba(0,0,0,0.05);
+            color: var(--text-primary);
+            padding: 10px 15px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            border: 1px solid rgba(0,0,0,0.1);
+            transition: 0.3s;
+            font-size: 14px;
+        }
+        .home-btn:hover { background: rgba(255,255,255,0.2); }
+
+        .back-btn {
+            position: absolute;
+            left: 110px;
+            top: 25px;
+            background: rgba(0,0,0,0.05);
+            color: var(--text-primary);
+            padding: 10px 15px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            border: 1px solid rgba(0,0,0,0.1);
+            transition: 0.3s;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .back-btn:hover { background: rgba(255,255,255,0.2); }
+
+        header h1 { margin: 0; font-weight: 800; background: linear-gradient(to right, #38bdf8, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        header p { margin: 6px 0 0; color: var(--text-muted); }
+
+        .container {
+            width: 90%;
+            max-width: 850px;
+            margin: 25px auto;
+        }
+
+        .info {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .info-box {
+            background: var(--bg-card);
+            backdrop-filter: blur(10px);
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid rgba(0,0,0,0.05);
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3);
+        }
+
+        .info-box strong { color: #38bdf8; font-size: 0.9em; text-transform: uppercase; letter-spacing: 1px; }
+
+        .progress {
+            text-align: center;
+            font-weight: 800;
+            margin: 25px 0;
+            font-size: 22px;
+            color: var(--accent);
+            text-shadow: 0 0 15px rgba(139, 92, 246, 0.5);
+        }
+
+        .question-box {
+            background: var(--bg-card);
+            backdrop-filter: blur(16px);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .question-box h2 { margin-top: 0; font-size: 24px; color: var(--text-primary); }
+
+        #codeList {
+            margin-top: 25px;
+            min-height: 100px;
+            padding: 15px;
+            background: rgba(255,255,255,0.5);
+            border-radius: 12px;
+            border: 1px dashed rgba(0,0,0,0.1);
+        }
+
+        .code-item {
+            background: var(--code-bg);
+            border: 1px solid var(--code-border);
+            padding: 16px 20px;
+            margin: 10px 0;
+            border-radius: 10px;
+            cursor: grab;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 15px;
+            color: #0f172a;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+            white-space: pre-wrap;
+            position: relative;
+        }
+
+        .code-item::before {
+            content: '⋮⋮';
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #475569;
+            font-size: 18px;
+        }
+
+        .code-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.4);
+            border-color: rgba(147, 197, 253, 0.5);
+        }
+        .code-item:active { cursor: grabbing; transform: scale(0.98); }
+
+        .code-snippet {
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(147, 197, 253, 0.5);
+            padding: 18px 22px;
+            border-radius: 12px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 15px;
+            color: #0f172a;
+            white-space: pre-wrap;
+            line-height: 1.6;
+            margin: 20px 0;
+            text-align: left;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .mcq-options {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 14px;
+            margin-top: 20px;
+        }
+        @media (min-width: 600px) {
+            .mcq-options {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .mcq-option-card {
+            background: rgba(255, 255, 255, 0.7);
+            border: 2px solid rgba(0, 0, 0, 0.08);
+            border-radius: 12px;
+            padding: 16px 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 15px;
+            color: #0f172a;
+            transition: all 0.25s ease;
+            text-align: left;
+            user-select: none;
+        }
+
+        .mcq-option-card:hover {
+            background: rgba(59, 130, 246, 0.15);
+            border-color: rgba(59, 130, 246, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .mcq-option-card.selected {
+            background: rgba(59, 130, 246, 0.25);
+            border-color: #38bdf8;
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
+        }
+
+        .mcq-badge {
+            background: rgba(56, 189, 248, 0.2);
+            color: #38bdf8;
+            font-weight: 800;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .mcq-option-card.selected .mcq-badge {
+            background: #38bdf8;
+            color: #0f172a;
+        }
+
+        .mcq-text {
+            word-break: break-word;
+        }
+
+        .predict-container, .fill-container {
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .predict-input {
+            width: 100%;
+            max-width: 450px;
+            padding: 14px 18px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid rgba(147, 197, 253, 0.3);
+            border-radius: 10px;
+            color: #38bdf8;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            box-sizing: border-box;
+        }
+
+        .predict-input:focus {
+            border-color: #38bdf8;
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
+        }
+
+        .fill-code-pre {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px dashed rgba(147, 197, 253, 0.3);
+            border-radius: 12px;
+            padding: 22px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 16px;
+            line-height: 1.8;
+            color: #f8fafc;
+            white-space: pre-wrap;
+            margin: 0;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.4);
+        }
+
+        .inline-fill-input {
+            width: 140px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 16px;
+            padding: 4px 10px;
+            background: rgba(56, 189, 248, 0.15);
+            color: #38bdf8;
+            border: 2px solid #38bdf8;
+            border-radius: 6px;
+            text-align: center;
+            outline: none;
+            vertical-align: middle;
+            font-weight: 700;
+        }
+
+        .inline-fill-input:focus {
+            background: rgba(56, 189, 248, 0.25);
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
+        }
+
+        .bool-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px -5px rgba(0,0,0,0.5);
+        }
+
+        .bool-card.selected-true {
+            background: rgba(16, 185, 129, 0.35) !important;
+            border-color: #10b981 !important;
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.6) !important;
+            transform: scale(1.03);
+        }
+
+        .bool-card.selected-false {
+            background: rgba(239, 68, 68, 0.35) !important;
+            border-color: #ef4444 !important;
+            box-shadow: 0 0 20px rgba(239, 68, 68, 0.6) !important;
+            transform: scale(1.03);
+        }
+
+        .buttons {
+            margin-top: 30px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            border: none;
+            padding: 14px 24px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-family: 'Outfit', sans-serif;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        #submitBtn {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            box-shadow: 0 10px 20px -5px rgba(59, 130, 246, 0.5);
+        }
+        #submitBtn:hover { transform: translateY(-2px); box-shadow: 0 15px 25px -5px rgba(59, 130, 246, 0.6); }
+
+        #resetBtn {
+            background: rgba(0,0,0,0.05);
+            color: white;
+            border: 1px solid rgba(0,0,0,0.1);
+        }
+        #resetBtn:hover { background: rgba(0,0,0,0.08); }
+
+        .help-section {
+            margin-top: 30px;
+            background: var(--bg-card);
+            backdrop-filter: blur(10px);
+            padding: 25px;
+            border-radius: 16px;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .help-buttons { display: flex; gap: 12px; flex-wrap: wrap; }
+        .help-buttons button {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--text-primary);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            padding: 10px 18px;
+        }
+        .help-buttons button:hover { background: rgba(245, 158, 11, 0.3); }
+
+        .hint {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            background: rgba(245, 158, 11, 0.1);
+            border-left: 4px solid #f59e0b;
+            border-radius: 0 8px 8px 0;
+            color: var(--text-primary);
+        }
+
+        .result {
+            display: none;
+            margin-top: 30px;
+            padding: 30px;
+            border-radius: 16px;
+            background: var(--bg-card);
+            text-align: center;
+            border: 2px solid transparent;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        .result h2 { margin-top: 0; }
+        #xpText { color: var(--text-primary); font-size: 20px; text-shadow: 0 0 10px rgba(252, 211, 77, 0.3); }
+
+        #nextContainer { display: none; margin-top: 25px; text-align: center; }
+        #nextContainer button { background: linear-gradient(135deg, var(--success), #059669); color: white; padding: 15px 30px; font-size: 18px; box-shadow: 0 10px 20px -5px rgba(16, 185, 129, 0.4); }
+        #nextContainer button:hover { transform: translateY(-2px); }
+
+        @media (max-width: 650px) {
+            .info { grid-template-columns: repeat(2, 1fr); }
+            .container { width: 95%; padding: 10px; }
+            .question-box { padding: 20px; }
+        }
+        @keyframes fadeInUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    </style>
+
+</head>
+
+
+<body>
+
+
+<header>
+    <a href="/" class="home-btn">🏠 Home</a>
+    <a href="/level?language={{ language }}&game_mode={{ game_mode }}&difficulty={{ difficulty }}" class="back-btn" style="text-decoration: none; text-align: center;">⬅️ Back</a>
+    <h1>🎮 CodeQuest</h1>
+
+    <p>
+        Programming Learning Through Gameplay
+    </p>
+
+    <div style="position: absolute; right: 20px; top: 22px;">
+
+    </div>
+</header>
+
+
+<div class="container">
+
+
+    <!-- GAME INFORMATION -->
+
+    <div class="info">
+
+        <div class="info-box">
+            <strong>Language</strong>
+            <br>
+            {{ language }}
+        </div>
+
+        <div class="info-box">
+            <strong>Mode</strong>
+            <br>
+            {{ game_mode }}
+        </div>
+
+        <div class="info-box">
+            <strong>Difficulty</strong>
+            <br>
+            {{ difficulty }}
+        </div>
+
+        <div class="info-box">
+            <strong>Level</strong>
+            <br>
+            {{ level }}
+        </div>
+
+    </div>
+
+
+    <!-- PROGRESS -->
+
+    <div class="progress">
+
+        {% if level == 'Master' or level == '4' %}
+
+            🏆 Master Challenge — Quest {{ challenge_number }} of 3
+
+        {% elif challenge_number <= 3 %}
+
+            Level {{ level }} — Quest {{ challenge_number }} of 3
+
+        {% else %}
+
+            Level {{ level }} — Bonus Quest {{ challenge_number }}
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- QUESTION -->
+
+    <div class="question-box">
+
+        <h2>
+            {{ question.question }}
+        </h2>
+
+        {% if question.type == 'mcq' %}
+            <p><strong>❓ Select the correct option:</strong></p>
+            {% if question.code_snippet %}
+                <pre class="code-snippet"><code>{{ question.code_snippet }}</code></pre>
+            {% endif %}
+            <div class="mcq-options" id="mcqOptions">
+                {% for opt in question.options %}
+                <div class="mcq-option-card" onclick="selectMCQ('{{ opt[0] }}', this)" data-val="{{ opt[0] }}">
+                    <span class="mcq-badge">{{ opt[0] }}</span>
+                    <span class="mcq-text">{{ opt }}</span>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="buttons">
+                <button id="submitBtn" onclick="checkMCQAnswer()">✅ Submit Answer</button>
+                <button id="resetBtn" onclick="resetBlocks()">🔄 Reset</button>
+            </div>
+
+        {% elif question.type == 'predict' %}
+            <p><strong>💡 Analyze the code and predict what will be printed:</strong></p>
+            <pre class="code-snippet"><code>{{ question.code_snippet }}</code></pre>
+            <div class="predict-container">
+                <label for="predictInput" style="display:block; margin-bottom: 8px; color: #94a3b8; font-weight: 600;">Console Output:</label>
+                <input type="text" id="predictInput" class="predict-input" placeholder="Type expected output..." autocomplete="off" onkeydown="if(event.key==='Enter') checkPredictAnswer()">
+            </div>
+            <div class="buttons">
+                <button id="submitBtn" onclick="checkPredictAnswer()">✅ Submit Output</button>
+                <button id="resetBtn" onclick="resetBlocks()">🔄 Reset</button>
+            </div>
+
+        {% elif question.type == 'fill' or question.type == 'debug' %}
+            {% if question.type == 'debug' %}
+                <p><strong>🐞 Spot the bug or error and enter the fix:</strong></p>
+            {% else %}
+                <p><strong>⌨️ Fill in the blank to complete the code correctly:</strong></p>
+            {% endif %}
+
+            {% if '_______' in question.code_snippet %}
+                <div id="fillContainer" class="fill-container">
+                    {% set parts = question.code_snippet.split('_______') %}
+                    <pre class="fill-code-pre"><code>{{ parts[0] }}<input type="text" id="fillInput" class="inline-fill-input" autocomplete="off" onkeydown="if(event.key==='Enter') checkFillAnswer()">{{ parts[1] if parts|length > 1 else '' }}</code></pre>
+                </div>
+            {% else %}
+                <pre class="code-snippet"><code>{{ question.code_snippet }}</code></pre>
+                <div class="predict-container">
+                    <input type="text" id="fillInput" class="predict-input" placeholder="Type your answer here..." autocomplete="off" onkeydown="if(event.key==='Enter') checkFillAnswer()">
+                </div>
+            {% endif %}
+
+            <div class="buttons">
+                <button id="submitBtn" onclick="checkFillAnswer()">✅ Submit Answer</button>
+                <button id="resetBtn" onclick="resetBlocks()">🔄 Reset</button>
+            </div>
+        {% elif question.type == 'boolean' %}
+            <p><strong>⚡ Determine if this code / query statement is Valid (True) or Invalid / Has a Bug (False):</strong></p>
+            {% if question.code_snippet %}
+                <pre class="code-snippet"><code>{{ question.code_snippet }}</code></pre>
+            {% endif %}
+            
+            <div class="bool-options" id="boolOptions">
+                <div class="bool-card" onclick="selectBool('True', this)" data-val="True">
+                    <span class="bool-badge">🟢</span>
+                    <span class="bool-text"><strong>TRUE</strong> — Valid / Correct Statement</span>
+                </div>
+                <div class="bool-card" onclick="selectBool('False', this)" data-val="False">
+                    <span class="bool-badge">🔴</span>
+                    <span class="bool-text"><strong>FALSE</strong> — Invalid / Syntax Error / Bug</span>
+                </div>
+            </div>
+
+            <div class="buttons">
+                <button id="submitBtn" onclick="checkBoolAnswer()">✅ Submit Verdict</button>
+                <button id="resetBtn" onclick="resetBlocks()">🔄 Reset</button>
+            </div>
+
+        {% else %}
+            <!-- Default to order (Drag & Drop, Code Arrangement) -->
+            <p><strong>🧩 Drag and arrange the code blocks in the correct order:</strong></p>
+
+            <div id="codeList">
+                {% for block in displayed_blocks %}
+                    <div class="code-item" draggable="true" data-id="{{ block.id }}">
+                        {{ block.text }}
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="buttons">
+                <button id="submitBtn" onclick="checkAnswer()">✅ Submit Arrangement</button>
+                <button id="resetBtn" onclick="resetBlocks()">🔄 Reset</button>
+            </div>
+        {% endif %}
+
+    </div>
+
+
+    <!-- HELP -->
+
+    <div class="help-section">
+
+        <h3>💡 Need Help?</h3>
+
+        <div class="help-buttons">
+
+            <button onclick="showHint(1)">
+                Hint 1
+            </button>
+
+            <button onclick="showHint(2)">
+                Hint 2
+            </button>
+
+            <button onclick="showHint(3)">
+                Learn
+            </button>
+
+        </div>
+
+
+        <div id="hint1" class="hint">
+            {{ question.hint1 }}
+        </div>
+
+        <div id="hint2" class="hint">
+            {{ question.hint2 }}
+        </div>
+
+        <div id="hint3" class="hint">
+            {{ question.explanation }}
+        </div>
+
+    </div>
+
+
+    <!-- RESULT -->
+
+    <div
+        id="result"
+        class="result"
+    >
+
+        <h2 id="resultTitle"></h2>
+
+        <p id="resultMessage"></p>
+
+        <h3 id="xpText"></h3>
+
+    </div>
+
+
+    <!-- NEXT CHALLENGE -->
+
+    <div id="nextContainer">
+
+        {% if challenge_number < 3 %}
+
+            <form
+                action="/next_challenge"
+                method="POST"
+            >
+
+                <input
+                    type="hidden"
+                    name="language"
+                    value="{{ language }}"
+                >
+
+                <input
+                    type="hidden"
+                    name="game_mode"
+                    value="{{ game_mode }}"
+                >
+
+                <input
+                    type="hidden"
+                    name="difficulty"
+                    value="{{ difficulty }}"
+                >
+
+                <input
+                    type="hidden"
+                    name="level"
+                    value="{{ level }}"
+                >
+
+                <input
+                    type="hidden"
+                    name="current_challenge"
+                    value="{{ challenge_number }}"
+                >
+
+                <button type="submit">
+                    ➡️ Next Challenge (Quest {{ challenge_number + 1 }} of 3)
+                </button>
+
+            </form>
+
+        {% elif challenge_number == 3 %}
+
+            <div style="display:flex; flex-direction:column; gap:14px; align-items:center;">
+
+                {% if level == '1' %}
+
+                    <form action="/challenge" method="POST">
+                        <input type="hidden" name="language" value="{{ language }}">
+                        <input type="hidden" name="game_mode" value="{{ game_mode }}">
+                        <input type="hidden" name="difficulty" value="{{ difficulty }}">
+                        <input type="hidden" name="level" value="2">
+                        <input type="hidden" name="challenge" value="1">
+                        <input type="hidden" name="unlock" value="true">
+                        <button type="submit" style="background: linear-gradient(135deg, #10b981, #059669); font-size:18px; padding:15px 32px; color: white;">
+                            🎉 Level 1 Cleared! Advance to Level 2 ➡️
+                        </button>
+                    </form>
+
+                {% elif level == '2' %}
+
+                    <form action="/challenge" method="POST">
+                        <input type="hidden" name="language" value="{{ language }}">
+                        <input type="hidden" name="game_mode" value="{{ game_mode }}">
+                        <input type="hidden" name="difficulty" value="{{ difficulty }}">
+                        <input type="hidden" name="level" value="3">
+                        <input type="hidden" name="challenge" value="1">
+                        <input type="hidden" name="unlock" value="true">
+                        <button type="submit" style="background: linear-gradient(135deg, #10b981, #059669); font-size:18px; padding:15px 32px; color: white;">
+                            🎉 Level 2 Cleared! Advance to Level 3 ➡️
+                        </button>
+                    </form>
+
+                {% elif level == '3' %}
+
+                    <form action="/challenge" method="POST">
+                        <input type="hidden" name="language" value="{{ language }}">
+                        <input type="hidden" name="game_mode" value="{{ game_mode }}">
+                        <input type="hidden" name="difficulty" value="{{ difficulty }}">
+                        <input type="hidden" name="level" value="4">
+                        <input type="hidden" name="challenge" value="1">
+                        <input type="hidden" name="unlock" value="true">
+                        <button type="submit" style="background: linear-gradient(135deg, #f59e0b, #d97706); font-size:18px; padding:15px 32px; color: white;">
+                            🏆 Level 3 Cleared! Enter Master Challenge 🌟
+                        </button>
+                    </form>
+
+                {% else %}
+
+                    <form action="/difficulty" method="POST">
+                        <input type="hidden" name="language" value="{{ language }}">
+                        <input type="hidden" name="game_mode" value="{{ game_mode }}">
+                        <button type="submit" style="background: linear-gradient(135deg, #f59e0b, #d97706); font-size:18px; padding:15px 32px;">
+                            👑 Master Challenge Conquered! Choose Another Difficulty 🎯
+                        </button>
+                    </form>
+
+                {% endif %}
+
+                <div style="display:flex; gap:12px; flex-wrap:wrap; justify-content:center;">
+                    <form action="/next_challenge" method="POST">
+                        <input type="hidden" name="language" value="{{ language }}">
+                        <input type="hidden" name="game_mode" value="{{ game_mode }}">
+                        <input type="hidden" name="difficulty" value="{{ difficulty }}">
+                        <input type="hidden" name="level" value="{{ level }}">
+                        <input type="hidden" name="current_challenge" value="{{ challenge_number }}">
+                        <button type="submit" style="background: rgba(0,0,0,0.05); border: 1px solid rgba(255,255,255,0.25); font-size:14px; padding:10px 18px;">
+                            🔄 Practice Another Question in Level {{ level }}
+                        </button>
+                    </form>
+
+                    <form action="/level" method="POST">
+                        <input type="hidden" name="language" value="{{ language }}">
+                        <input type="hidden" name="game_mode" value="{{ game_mode }}">
+                        <input type="hidden" name="difficulty" value="{{ difficulty }}">
+                        <button type="submit" style="background: rgba(0,0,0,0.05); border: 1px solid rgba(255,255,255,0.25); font-size:14px; padding:10px 18px;">
+                            📋 Level Menu
+                        </button>
+                    </form>
+                </div>
+
+            </div>
+
+        {% else %}
+
+            <div style="display:flex; gap:14px; justify-content:center; flex-wrap:wrap;">
+                <form action="/next_challenge" method="POST">
+                    <input type="hidden" name="language" value="{{ language }}">
+                    <input type="hidden" name="game_mode" value="{{ game_mode }}">
+                    <input type="hidden" name="difficulty" value="{{ difficulty }}">
+                    <input type="hidden" name="level" value="{{ level }}">
+                    <input type="hidden" name="current_challenge" value="{{ challenge_number }}">
+                    <button type="submit">
+                        ➡️ Continue Practice (Quest {{ challenge_number + 1 }})
+                    </button>
+                </form>
+
+                <form action="/level" method="POST">
+                    <input type="hidden" name="language" value="{{ language }}">
+                    <input type="hidden" name="game_mode" value="{{ game_mode }}">
+                    <input type="hidden" name="difficulty" value="{{ difficulty }}">
+                    <button type="submit" style="background: rgba(0,0,0,0.08);">
+                        📋 Level Menu
+                    </button>
+                </form>
+            </div>
+
+        {% endif %}
+
+    </div>
+
+
+</div>
+
+
+<script>
+
+
+// =====================================================
+// DRAG AND DROP
+// =====================================================
+
+let draggedItem = null;
+
+const codeList = document.getElementById("codeList");
+
+if (codeList) {
+    codeList.addEventListener(
+        "dragstart",
+        function(event) {
+            if (event.target.classList.contains("code-item")) {
+                draggedItem = event.target;
+            }
+        }
+    );
+
+    codeList.addEventListener(
+        "dragover",
+        function(event) {
+            event.preventDefault();
+        }
+    );
+
+    codeList.addEventListener(
+        "drop",
+        function(event) {
+            event.preventDefault();
+            const target = event.target.closest(".code-item");
+            if (target && draggedItem && target !== draggedItem) {
+                const items = [...codeList.children];
+                const draggedIndex = items.indexOf(draggedItem);
+                const targetIndex = items.indexOf(target);
+                if (draggedIndex < targetIndex) {
+                    codeList.insertBefore(draggedItem, target.nextSibling);
+                } else {
+                    codeList.insertBefore(draggedItem, target);
+                }
+            }
+        }
+    );
+}
+
+
+// =====================================================
+// CHECK ANSWER
+// =====================================================
+
+function processCorrectAnswer() {
+    if (typeof playYaahCheerSound === 'function') {
+        playYaahCheerSound();
+    }
+
+    const result = document.getElementById("result");
+    const resultTitle = document.getElementById("resultTitle");
+    const resultMessage = document.getElementById("resultMessage");
+    const xpText = document.getElementById("xpText");
+    const nextContainer = document.getElementById("nextContainer");
+    
+    result.style.display = "block";
+    resultTitle.innerHTML = "🎉 Yaaay! Excellent Job!";
+    resultMessage.innerHTML = "Your answer is completely correct!";
+    xpText.innerHTML = "⭐ +10 XP";
+    result.style.border = "3px solid #10b981";
+    result.style.boxShadow = "0 0 35px rgba(16, 185, 129, 0.45)";
+    result.style.animation = "victoryFloat 0.5s ease-out";
+
+    fetch('/submit_score', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ points: 10 })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if(data && data.status === 'success') {
+            xpText.innerHTML = "⭐ +10 XP (Total: " + data.new_score + ")";
+        }
+    })
+    .catch(err => {
+        console.warn("Score submission warning:", err);
+    });
+
+    nextContainer.style.display = "block";
+    
+    // Auto-scroll to the result so the user doesn't have to scroll down manually
+    result.scrollIntoView({ behavior: 'smooth', block: 'end' });
+}
+
+function processWrongAnswer() {
+    const result = document.getElementById("result");
+    const resultTitle = document.getElementById("resultTitle");
+    const resultMessage = document.getElementById("resultMessage");
+    const xpText = document.getElementById("xpText");
+    const nextContainer = document.getElementById("nextContainer");
+    
+    result.style.display = "block";
+    resultTitle.innerHTML = "🙂 Good Attempt!";
+    resultMessage.innerHTML = "Not quite right yet. Try again!";
+    xpText.innerHTML = "💪 Keep learning!";
+    result.style.border = "3px solid #ef4444";
+    nextContainer.style.display = "none";
+    
+    // Auto-scroll to the result so the user doesn't have to scroll down manually
+    result.scrollIntoView({ behavior: 'smooth', block: 'end' });
+}
+
+let selectedMCQ = null;
+
+function selectMCQ(val, elem) {
+    selectedMCQ = val;
+    document.querySelectorAll('.mcq-option-card').forEach(c => c.classList.remove('selected'));
+    elem.classList.add('selected');
+}
+
+function checkMCQAnswer() {
+    if (!selectedMCQ) {
+        alert("Please click to select an option (A, B, C, or D) first!");
+        return;
+    }
+    const correctAnswer = ({{ (question.correct_answer or "") | tojson }}).trim().toUpperCase();
+    if (selectedMCQ.toUpperCase() === correctAnswer) {
+        processCorrectAnswer();
+    } else {
+        processWrongAnswer();
+    }
+}
+
+function checkPredictAnswer() {
+    const elem = document.getElementById("predictInput");
+    const input = (elem ? elem.value : "").trim();
+    if (!input) {
+        alert("Please enter your predicted output first!");
+        return;
+    }
+    const correctAnswer = ({{ (question.correct_answer or "") | tojson }}).trim();
+    
+    // Normalization: compare ignoring outer quotes or trailing semicolons, case-insensitive
+    const cleanInput = input.replace(/^['"]|['"]$/g, '').toLowerCase();
+    const cleanTarget = correctAnswer.replace(/^['"]|['"]$/g, '').toLowerCase();
+    
+    if (cleanInput === cleanTarget || input.toLowerCase() === correctAnswer.toLowerCase() || input === correctAnswer) {
+        processCorrectAnswer();
+    } else {
+        processWrongAnswer();
+    }
+}
+
+function checkFillAnswer() {
+    const elem = document.getElementById("fillInput");
+    const input = (elem ? elem.value : "").trim();
+    if (!input) {
+        alert("Please fill in your answer first!");
+        return;
+    }
+    const correctAnswer = ({{ (question.correct_answer or "") | tojson }}).trim();
+    const cleanInput = input.replace(/^['"]|['"]$/g, '').toLowerCase();
+    const cleanTarget = correctAnswer.replace(/^['"]|['"]$/g, '').toLowerCase();
+    
+    // Check case-insensitively and standard equality
+    if (cleanInput === cleanTarget || input.toLowerCase() === correctAnswer.toLowerCase() || input === correctAnswer) {
+        processCorrectAnswer();
+    } else {
+        processWrongAnswer();
+    }
+}
+
+let selectedBool = null;
+
+function selectBool(val, elem) {
+    selectedBool = val;
+    document.querySelectorAll('.bool-card').forEach(c => {
+        c.classList.remove('selected-true', 'selected-false');
+    });
+    if (val === 'True') {
+        elem.classList.add('selected-true');
+    } else {
+        elem.classList.add('selected-false');
+    }
+}
+
+function checkBoolAnswer() {
+    if (!selectedBool) {
+        alert("Please select either TRUE (Valid) or FALSE (Invalid) first!");
+        return;
+    }
+    const correctAnswer = ({{ (question.correct_answer or "") | tojson }}).trim();
+    if (selectedBool.toLowerCase() === correctAnswer.toLowerCase()) {
+        processCorrectAnswer();
+    } else {
+        processWrongAnswer();
+    }
+}
+
+function checkAnswer() {
+    const items = [
+        ...document.querySelectorAll(
+            "#codeList .code-item"
+        )
+    ];
+
+    const answer = items.map(
+        item => item.dataset.id
+    );
+
+    const correctAnswer =
+        {{ correct_order | tojson }};
+
+    const isCorrect =
+        JSON.stringify(answer) ===
+        JSON.stringify(correctAnswer);
+
+    if (isCorrect) {
+        processCorrectAnswer();
+    } else {
+        processWrongAnswer();
+    }
+}
+
+
+// =====================================================
+// RESET
+// =====================================================
+
+function resetBlocks() {
+    // Reset MCQ selection
+    selectedMCQ = null;
+    document.querySelectorAll('.mcq-option-card').forEach(c => c.classList.remove('selected'));
+    
+    // Reset Bool selection
+    selectedBool = null;
+    document.querySelectorAll('.bool-card').forEach(c => {
+        c.classList.remove('selected-true', 'selected-false');
+    });
+    
+    // Reset inputs
+    const pIn = document.getElementById("predictInput");
+    if (pIn) pIn.value = "";
+    const fIn = document.getElementById("fillInput");
+    if (fIn) fIn.value = "";
+    
+    // Reset result and next buttons
+    const res = document.getElementById("result");
+    if (res) res.style.display = "none";
+    const nextBox = document.getElementById("nextContainer");
+    if (nextBox) nextBox.style.display = "none";
+    
+    // Hide hints
+    for (let i = 1; i <= 3; i++) {
+        const hint = document.getElementById("hint" + i);
+        if (hint) hint.style.display = "none";
+    }
+
+    // For drag and drop, reshuffle the items in the DOM
+    const list = document.getElementById("codeList");
+    if (list && list.children.length > 1) {
+        for (let i = list.children.length; i >= 0; i--) {
+            list.appendChild(list.children[Math.random() * i | 0]);
+        }
+    }
+}
+
+
+// =====================================================
+// HINTS
+// =====================================================
+
+function showHint(number) {
+
+    const hint =
+        document.getElementById(
+            "hint" + number
+        );
+
+    if (
+        hint.style.display === "block"
+    ) {
+
+        hint.style.display = "none";
+
+    } else {
+
+        hint.style.display = "block";
+
+    }
+
+}
+
+
+// =====================================================
+// COMPLETE LEVEL
+// =====================================================
+
+function completeLevel() {
+
+    alert(
+        "🎉 Congratulations! You completed the level!"
+    );
+
+}
+
+
+</script>
+
+
+</body>
+
+</html>

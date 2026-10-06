@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Language Track - CodeQuest</title>
+    <link rel="stylesheet" href="/static/css/theme.css">
+    <script src="/static/js/sound_effects.js"></script>
+    <style>
+        .lang-card {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-lg);
+            padding: 35px 25px;
+            text-align: center;
+            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .lang-card:hover {
+            transform: translateY(-8px);
+            background: rgba(255, 255, 255, 1);
+            box-shadow: 0 20px 40px -10px rgba(99, 102, 241, 0.35);
+            border-color: rgba(99, 102, 241, 0.5);
+        }
+        .lang-icon {
+            font-size: 52px;
+            margin-bottom: 12px;
+            display: inline-block;
+            transition: transform 0.3s ease;
+        }
+        .lang-card:hover .lang-icon {
+            transform: scale(1.15) rotate(6deg);
+        }
+        .lang-tag {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+        }
+        .tag-python { background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); }
+        .tag-java { background: rgba(249, 115, 22, 0.15); color: #fb923c; border: 1px solid rgba(249, 115, 22, 0.3); }
+        .tag-sql { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+        
+        .stat-chips {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin: 15px 0 25px;
+            flex-wrap: wrap;
+        }
+        .stat-chip {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            padding: 5px 10px;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="app-nav">
+        <a href="/" class="brand">
+            <span class="brand-icon">🎮</span>
+            <div>
+                <h1 class="brand-title">CodeQuest</h1>
+                <p class="brand-subtitle">Level Up Your Code</p>
+            </div>
+        </a>
+        <div class="nav-actions">
+
+            <a href="/" class="nav-pill">🏠 Home</a>
+            <a href="/leaderboard" class="nav-pill nav-pill-warning">🏆 Leaderboard</a>
+        </div>
+    </nav>
+
+    <div class="glass-container">
+        <div style="text-align: center; margin-bottom: 35px;">
+            <h2 class="gradient-title" style="font-size: 34px; margin-bottom: 8px;">🚀 Choose Your Quest Track</h2>
+            <p class="subtitle">Select the programming discipline you wish to master through algorithmic challenges, syntax puzzles, and code battles.</p>
+        </div>
+
+        <div class="grid-cards" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
+            
+            <!-- Python -->
+            <div class="lang-card">
+                <div>
+                    <span class="lang-icon">🐍</span>
+                    <br>
+                    <span class="lang-tag tag-python">Rapid Development</span>
+                    <h3 style="font-size: 24px; margin-bottom: 8px;">Python Track</h3>
+                    <p style="color: var(--text-secondary); font-size: 14px; margin-bottom: 12px;">
+                        Master Pythonic syntax, list comprehensions, lambda scopes, generators, and data structures.
+                    </p>
+                    <div class="stat-chips">
+                        <span class="stat-chip">⚡ 4 Levels</span>
+                        <span class="stat-chip">🔥 6 Modes</span>
+                        <span class="stat-chip">⭐ 600+ XP</span>
+                    </div>
+                </div>
+                <form action="/start_game" method="POST">
+                    <input type="hidden" name="language" value="Python">
+                    <button type="submit" class="btn-primary" style="background: linear-gradient(135deg, #0284c7, #2563eb);">
+                        Enter Python Track ➔
+                    </button>
+                </form>
+            </div>
+
+            <!-- Java -->
+            <div class="lang-card">
+                <div>
+                    <span class="lang-icon">☕</span>
+                    <br>
+                    <span class="lang-tag tag-java">Enterprise Grade</span>
+                    <h3 style="font-size: 24px; margin-bottom: 8px;">Java Track</h3>
+                    <p style="color: var(--text-secondary); font-size: 14px; margin-bottom: 12px;">
+                        Conquer strong typing, OOP principles, inheritance, streams, exception handling, and modern records.
+                    </p>
+                    <div class="stat-chips">
+                        <span class="stat-chip">⚡ 4 Levels</span>
+                        <span class="stat-chip">🔥 6 Modes</span>
+                        <span class="stat-chip">⭐ 600+ XP</span>
+                    </div>
+                </div>
+                <form action="/start_game" method="POST">
+                    <input type="hidden" name="language" value="Java">
+                    <button type="submit" class="btn-primary" style="background: linear-gradient(135deg, #ea580c, #c026d3);">
+                        Enter Java Track ➔
+                    </button>
+                </form>
+            </div>
+
+            <!-- SQL -->
+            <div class="lang-card">
+                <div>
+                    <span class="lang-icon">🗄️</span>
+                    <br>
+                    <span class="lang-tag tag-sql">Relational Database</span>
+                    <h3 style="font-size: 24px; margin-bottom: 8px;">SQL Track</h3>
+                    <p style="color: var(--text-secondary); font-size: 14px; margin-bottom: 12px;">
+                        Architect precision queries, aggregate functions, multi-table joins, subqueries, and window functions.
+                    </p>
+                    <div class="stat-chips">
+                        <span class="stat-chip">⚡ 4 Levels</span>
+                        <span class="stat-chip">🔥 6 Modes</span>
+                        <span class="stat-chip">⭐ 600+ XP</span>
+                    </div>
+                </div>
+                <form action="/start_game" method="POST">
+                    <input type="hidden" name="language" value="SQL">
+                    <button type="submit" class="btn-primary" style="background: linear-gradient(135deg, #059669, #0d9488);">
+                        Enter SQL Track ➔
+                    </button>
+                </form>
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+</html>

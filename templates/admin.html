@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - CodeQuest</title>
+    <style>
+        body { margin: 0; font-family: Arial, sans-serif; background: #f4f7fb; color: #222; }
+        header { background: #202a44; color: white; padding: 20px; text-align: center; }
+        .container { max-width: 800px; margin: 40px auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 3px 10px rgba(0,0,0,0.1); }
+        .stats { display: flex; justify-content: space-around; margin-bottom: 30px; }
+        .stat-box { background: #eef2ff; padding: 20px; border-radius: 10px; text-align: center; width: 40%; font-size: 1.2rem; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background: #2563eb; color: white; }
+        tr:hover { background: #f1f5f9; }
+        .btn { background: #16a34a; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; text-decoration: none; font-size: 0.9rem; }
+        .btn:disabled { background: #9ca3af; cursor: not-allowed; }
+        .flash { color: green; margin-bottom: 10px; text-align: center; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>🛡️ Admin Dashboard</h1>
+</header>
+
+<div class="container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="flash">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <div class="stats">
+        <div class="stat-box">
+            <strong>Total Users</strong><br>
+            {{ total_users }}
+        </div>
+        <div class="stat-box">
+            <strong>Total High Scores</strong><br>
+            {{ total_scores }}
+        </div>
+    </div>
+
+    <h2>Registered Users</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Role</th>
+                <th>Total XP</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for u in users %}
+            <tr>
+                <td>{{ u.id }}</td>
+                <td>{{ u.username }}</td>
+                <td>{{ u.role }}</td>
+                <td>⭐ {{ u.total_xp }}</td>
+                <td>
+                    {% if u.role != 'admin' %}
+                    <form method="POST" action="/admin/make_admin/{{ u.id }}" style="display:inline;">
+                        <button type="submit" class="btn">Make Admin</button>
+                    </form>
+                    {% else %}
+                    <button class="btn" disabled>Is Admin</button>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div style="text-align: center; margin-top: 30px;">
+        <a href="/" class="btn" style="background: #2563eb; padding: 10px 20px; font-size: 1rem;">🏠 Back to Home</a>
+    </div>
+</div>
+
+</body>
+</html>
