@@ -8,7 +8,7 @@
     <script src="/static/js/sound_effects.js"></script>
     <style>
         .lang-card {
-            background: rgba(255, 255, 255, 0.9);
+            background: var(--bg-card);
             border: 1px solid var(--border-glass);
             border-radius: var(--radius-lg);
             padding: 35px 25px;
@@ -22,7 +22,7 @@
         }
         .lang-card:hover {
             transform: translateY(-8px);
-            background: rgba(255, 255, 255, 1);
+            background: var(--bg-card-hover);
             box-shadow: 0 20px 40px -10px rgba(99, 102, 241, 0.35);
             border-color: rgba(99, 102, 241, 0.5);
         }
@@ -159,6 +159,30 @@
                     <input type="hidden" name="language" value="SQL">
                     <button type="submit" class="btn-primary" style="background: linear-gradient(135deg, #059669, #0d9488);">
                         Enter SQL Track ➔
+                    </button>
+                </form>
+            </div>
+
+            <!-- AIML -->
+            <div class="lang-card">
+                <div>
+                    <span class="lang-icon">🤖</span>
+                    <br>
+                    <span class="lang-tag tag-aiml" style="background: rgba(236, 72, 153, 0.15); color: #ec4899; border: 1px solid rgba(236, 72, 153, 0.3);">Artificial Intelligence</span>
+                    <h3 style="font-size: 24px; margin-bottom: 8px;">AIML Track</h3>
+                    <p style="color: var(--text-secondary); font-size: 14px; margin-bottom: 12px;">
+                        Master machine learning models, neural networks, data preprocessing, and deep learning frameworks.
+                    </p>
+                    <div class="stat-chips">
+                        <span class="stat-chip">⚡ 4 Levels</span>
+                        <span class="stat-chip">🔥 6 Modes</span>
+                        <span class="stat-chip">⭐ 600+ XP</span>
+                    </div>
+                </div>
+                <form action="/start_game" method="POST">
+                    <input type="hidden" name="language" value="AIML">
+                    <button type="submit" class="btn-primary" style="background: linear-gradient(135deg, #db2777, #9d174d);">
+                        Enter AIML Track ➔
                     </button>
                 </form>
             </div>

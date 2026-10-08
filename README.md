@@ -4,34 +4,34 @@
 
 ## 🚀 Overview
 
-**CodeQuest** is a Flask‑based web application that turns learning programming into an engaging adventure game.  Learners embark on *quests* (coding challenges) across multiple tracks—**Python**, **Java**, and **SQL**—and progress through levels, earn points, badges, and climb leaderboards.
+**CodeQuest** is a Flask-based web application that turns learning programming into an engaging adventure game. Learners embark on *quests* (coding challenges) across multiple tracks—**Python**, **Java**, and **SQL**—and progress through levels, earn points, and climb leaderboards.
 
-The platform implements adaptive recommendation logic to serve challenges tailored to each learner’s performance, provides instant feedback on submissions, and offers a full‑featured admin console for managing content.
+The platform implements a massive pre-generated JSON question bank (`questions.json`) containing over 45,000 unique programming challenges. It offers instant feedback on submissions, a beautiful dark-mode glassmorphic user interface, and a robust built-in admin console for live content management.
 
 ---
 
-## ✨ Key Objectives (Implemented)
+## ✨ Key Features & Capabilities
 
-| # | Objective | Status |
-|---|-----------|--------|
-| 1 | Interactive platform for learning programming through gameplay | ✅ |
-| 2 | Programming challenges arranged by difficulty & learning level | ✅ |
-| 3 | Support for Python, Java, SQL tracks | ✅ |
-| 4 | Points, badges, levels, leaderboards to encourage practice | ✅ |
-| 5 | Immediate feedback for submitted answers or solutions | ✅ |
-| 6 | Learner profiles & performance history | ✅ |
-| 7 | Analyze learner performance & recommend appropriate challenges | ✅ |
-| 8 | Administrator interface for managing questions, levels and content | ✅ |
+- **Interactive Programming Gameplay**: Engaging gamified progression through various modes (Drag & Drop, MCQ, Fill in the Blanks, Code Arrangement, Syntax Validator, Debug the Code, Predict the Output).
+- **Extensive Content**: Tracks in Python, Java, and SQL spanning Beginner to Advanced difficulties and scaling up to "Master" levels.
+- **Level Locking & Unlocking**: Automatically unlocks higher levels as players progress through challenges sequentially.
+- **Points & Global Leaderboards**: Awards XP/Points upon challenge completion, immediately updating the global ranking system.
+- **Dark Mode UI**: Beautiful, modern "Glassmorphism" interface inherited natively across both player and admin views.
+- **Full Admin Console (`/admin`)**:
+  - Live analytics on total users and total scores.
+  - End-to-end data control: Delete users or specific score entries to moderate the leaderboard.
+  - **Question Manager (`/admin/questions`)**: Filter, edit (via live JSON editor), add, and delete questions securely. Any updates sync directly to `questions.json`.
+  - Seamless "Make Admin" user role controls.
 
 ---
 
 ## 🛠️ Technology Stack
 
-- **Backend**: Python 3.11, **Flask**
-- **Database**: SQLite (`codequest.db`)
-- **Frontend**: HTML5, CSS3, Vanilla JavaScript (see `static/js/quest_engine.js`)
-- **Adaptive Engine**: Custom logic in `adaptive_engine.py`
-- **Code Execution**: Sandbox wrapper in `code_runner.py`
+- **Backend**: Python 3.11, **Flask**
+- **Database**: SQLite (`scores.db` - automatically managed by SQLAlchemy)
+- **Data Storage**: `questions.json` for all educational content logic.
+- **Frontend**: HTML5, CSS3 (Custom variables, Glassmorphism, CSS Grid/Flexbox), Jinja2 Templating
+- **Testing**: `pytest` and Flask Test Client (`test_app.py`)
 
 ---
 
@@ -39,144 +39,88 @@ The platform implements adaptive recommendation logic to serve challenges tailor
 
 ```
 game_app/
-│   app.py                # Flask app, routes & view logic
-│   config.py             # Global configuration & constants
-│   models.py             # DB access & business logic
-│   adaptive_engine.py    # Adaptive recommendation engine
-│   code_runner.py        # Safe evaluation of code answers
-│   database.py           # DB connection helpers
-│   seed_data.py          # Sample data loader
+│   app.py                # Main Flask application and all routing logic
+│   questions.json        # 1.9MB+ JSON database of all programming challenges
+│   test_app.py           # Pytest test suite ensuring app integrity
 │   requirements.txt      # Python dependencies
 │   README.md             # ← **this file**
 │
-├───templates/           # Jinja2 HTML templates
-│   │   index.html
-│   │   register.html
-│   │   login.html
-│   │   dashboard.html
-│   │   challenge.html
-│   │   profile.html
-│   │   analytics.html
-│   │   leaderboard.html
-│   └───admin/          # Admin UI templates
-│           admin_dashboard.html
-│           questions.html
-│           question_form.html
-│           users.html
+├───templates/            # Jinja2 HTML templates
+│       index.html
+│       register.html
+│       login.html
+│       language.html
+│       game_mode.html
+│       difficulty.html
+│       level.html
+│       challenge.html
+│       leaderboard.html
+│       admin.html              # Admin Dashboard
+│       admin_questions.html    # Admin Question Editor
 │
-├───static/              # Static assets (CSS, JS, images)
-│   └───js/
-│           quest_engine.js
-│
-└───__pycache__/        # Compiled Python files (auto‑generated)
+└───static/               # Static assets
+    └───css/
+            theme.css     # Global sleek dark mode CSS system
 ```
 
 ---
 
-## 🎮 Features
+## 📦 Getting Started (End-to-End Instructions)
 
-- **Adaptive Quest Selection** – `adaptive_engine.get_next_adaptive_challenge` analyzes recent attempts, streaks, and topic weaknesses to suggest the next challenge.
-- **Gamification** – XP, level progression, streak bonuses, first‑try bonus, speed bonuses, badges, and global/track leaderboards.
-- **Immediate Feedback** – Submissions are evaluated instantly via `/api/submit-challenge`; response includes correctness, score, explanation, and next quest suggestion.
-- **Learner Profiles** – Persistent user data, performance summary, badge collection, per‑track progress, and analytics page.
-- **Admin Console** – CRUD UI for questions, tracks, users, and analytics dashboards.
-- **Multi‑Track Support** – Users can switch between Python, Java, and SQL tracks; each track has its own question pool.
-- **Extensible Architecture** – Adding new tracks, question types, or difficulty tiers only requires updates to `config.py` and corresponding DB entries.
-
----
-
-## 📦 Getting Started
-
-1. **Clone the repository** (or open the workspace at `d:/ML Projects/antigravity/game_app`).
+1. **Clone the repository** and navigate to the project directory:
+   ```bash
+   cd "d:/ML Projects/antigravity/game_app"
+   ```
 2. **Create a virtual environment**:
    ```bash
-   python -m venv .venv
-   .venv\Scripts\activate   # Windows
+   python -m venv venv
+   .\venv\Scripts\activate   # Windows
    ```
 3. **Install dependencies**:
    ```bash
    pip install -r requirements.txt
    ```
-4. **Initialize the SQLite database** (creates tables and loads seed data):
-   ```bash
-   python app.py   # The script calls init_db() on first run
-   ```
-   The DB file `codequest.db` will be created in the project root.
-5. **Run the development server**:
+4. **Run the development server**:
    ```bash
    python app.py
    ```
-   Open `http://127.0.0.1:5000` in a browser.
+   The SQLite database (`scores.db`) will automatically initialize itself upon startup.
+5. **Open your browser** and navigate to `http://127.0.0.1:5000`.
+
+---
+
+## 🛡️ Admin Setup
+
+To access the Admin dashboard and question editor:
+1. Navigate to `http://127.0.0.1:5000/register`.
+2. Register a new user with the exact username **`admin`**.
+3. Log in. The application will automatically assign you the `admin` role.
+4. An **"🛡️ Admin"** button will appear in your top navigation bar.
 
 ---
 
 ## 🧪 Running Tests
 
-A basic test suite lives in `test_app.py` and `test_core.py`. Run them with:
+A comprehensive test suite is located in `test_app.py` covering auth, protected routes, database integrity, question bank validations, and template rendering logic. 
+
+Run the tests using pytest:
 ```bash
-python -m unittest discover -s . -p "test_*.py"
+python -m pytest test_app.py
 ```
 
 ---
 
-## 📡 API Endpoints (important ones)
+## 🤝 Contributing & Extending
 
-| Method | Route | Description |
-|--------|-------|-------------|
-| `GET` | `/` | Landing page – redirects to dashboard if logged in |
-| `POST`| `/register` | Create a new learner account (select track) |
-| `POST`| `/login` | Authenticate user |
-| `GET` | `/dashboard` | Learner hub – shows current XP, next quest, stats |
-| `GET` | `/challenge/<int:question_id>` | Render a specific challenge |
-| `GET` | `/challenge/next` | Adaptive next‑challenge redirect |
-| `POST`| `/api/submit-challenge` | Submit an answer; returns JSON with feedback, XP, next‑question ID |
-| `GET` | `/leaderboard` | Global & per‑track leaderboards |
-| `GET` | `/profile` | Learner profile & recent activity |
-| `GET` | `/analytics` | Detailed performance diagnostics |
-| **Admin** | `/admin` | Admin dashboard (user & question stats) |
-| **Admin** | `/admin/questions` | List / filter questions |
-| **Admin** | `/admin/questions/new` | Create a new question |
-| **Admin** | `/admin/questions/edit/<int:q_id>` | Edit an existing question |
-| **Admin** | `/admin/questions/delete/<int:q_id>` (POST) | Delete a question |
-| **Admin** | `/admin/users` | View all users (except admins) |
-
----
-
-## 🔧 Extending the Platform
-
-1. **Add a new track** –
-   - Append the track name to `Config.TRACKS` in `config.py`.
-   - Insert a row into the `tracks` table (run a migration or use the admin UI).
-2. **New question type** –
-   - Extend `code_runner.evaluate_challenge_answer` to handle the new type.
-   - Update the admin forms (`templates/admin/question_form.html`) to capture required fields.
-3. **Custom scoring** –
-   - Adjust XP logic in `api_submit_challenge` or in `models.add_user_xp`.
-4. **Styling** –
-   - Modify CSS in the `static/` folder or add new stylesheets; the UI uses vanilla CSS for maximum flexibility.
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome! Please follow these steps:
-1. Fork the repository.
-2. Create a feature branch (`git checkout -b feat/your-feature`).
-3. Write tests for any new functionality.
-4. Ensure all existing tests pass.
-5. Submit a pull request with a clear description of changes.
+1. **Adding Custom Questions**:
+   You no longer need to modify the file directly! Simply log in as an admin, navigate to **Manage Question Bank**, select the category, and click **Add New Question**.
+2. **Adding a New Mode/Language**:
+   Update the hardcoded category checks in `app.py` (e.g., inside `normalize_language`) and add the category to `questions.json`.
+3. **Styling Tweaks**:
+   All frontend and backend views share `static/css/theme.css`. Modify the root variables (like `--primary` or `--bg-dark`) to re-theme the entire platform instantly.
 
 ---
 
 ## 📄 License
 
-This project is released under the **MIT License**. See the `LICENSE` file for details.
-
----
-
-## 📞 Contact
-
-For questions or feedback, open an issue in the repository or contact the project maintainer.
-
----
-*Created with Antigravity – your AI coding co-pilot.*
+This project is released under the **MIT License**.

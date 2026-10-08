@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Question Manager - Admin Dashboard</title>
+    <link rel="stylesheet" href="/static/css/theme.css">
+    <style>
+        .q-container { background: var(--bg-card); border: 1px solid var(--border-glass); padding: 25px; margin-bottom: 25px; border-radius: var(--radius-md); box-shadow: var(--shadow-card); }
+        .q-container h3 { margin-top: 0; color: white; font-family: var(--font-heading); font-size: 1.3rem; margin-bottom: 20px; }
+        
+        textarea { width: 100%; height: 250px; font-family: var(--font-code); font-size: 14px; padding: 15px; background: rgba(0,0,0,0.4); color: #e2e8f0; border: 1px solid var(--border-glass); border-radius: 8px; transition: all 0.2s; line-height: 1.5; }
+        textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 2px var(--primary-glow); }
+        
+        .flex-row { display: flex; gap: 15px; margin-bottom: 15px; align-items: center; flex-wrap: wrap; }
+        
+        input[type="text"], .custom-select { background: rgba(0,0,0,0.3); border: 1px solid var(--border-glass); color: white; padding: 12px 15px; border-radius: 8px; font-family: var(--font-body); font-size: 1rem; transition: all 0.2s; }
+        input[type="text"]:focus, .custom-select:focus { outline: none; border-color: var(--primary); }
+        .custom-select option { background: var(--bg-surface); color: white; }
+        label { color: var(--text-secondary); font-weight: 500; }
+        
+        .btn-action { padding: 10px 20px; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; font-family: var(--font-body); transition: all 0.2s; font-size: 0.95rem; }
+        .btn-save { background: var(--success); color: white; }
+        .btn-save:hover { box-shadow: 0 0 20px var(--success-glow); transform: translateY(-2px); }
+        .btn-delete { background: var(--danger); color: white; }
+        .btn-delete:hover { box-shadow: 0 0 20px rgba(239,68,68,0.4); transform: translateY(-2px); }
+        .btn-load { background: var(--primary); color: white; padding: 12px 24px; }
+        .btn-load:hover { box-shadow: 0 0 20px var(--primary-glow); transform: translateY(-2px); }
+        .btn-add { background: var(--accent); color: white; }
+        .btn-add:hover { box-shadow: 0 0 20px var(--accent-glow); transform: translateY(-2px); }
+    </style>
+</head>
+<body>
+
+<nav class="app-nav">
+    <a href="/admin" class="brand">
+        <span class="brand-icon">📝</span>
+        <div>
+            <h1 class="brand-title">Question Manager</h1>
+            <p class="brand-subtitle">Admin Dashboard</p>
+        </div>
+    </a>
+    <div class="nav-actions">
+        <a href="/admin" class="nav-pill">⬅️ Back to Admin</a>
+    </div>
+</nav>
+
+<div style="max-width: 1000px; margin: 40px auto; padding: 0 20px;">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div style="background: rgba(16, 185, 129, 0.15); border: 1px solid #10b981; color: #34d399; padding: 15px; border-radius: 8px; margin-bottom: 25px; text-align: center;">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <!-- Filter Form -->
+    <div class="q-container" style="border-top: 4px solid var(--primary);">
+        <h3>🔍 Select Category</h3>
+        <form method="GET" action="/admin/questions">
+            <div class="flex-row">
+                <div style="display: flex; flex-direction: column; gap: 5px;">
+                    <label>Language:</label>
+                    <select name="lang" class="custom-select" style="width:140px;">
+                        <option value="Python" {% if lang == 'Python' %}selected{% endif %}>Python</option>
+                        <option value="SQL" {% if lang == 'SQL' %}selected{% endif %}>SQL</option>
+                        <option value="Java" {% if lang == 'Java' %}selected{% endif %}>Java</option>
+                    </select>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 5px;">
+                    <label>Mode:</label>
+                    <select name="mode" class="custom-select" style="width:200px;">
+                        <option value="Drag & Drop" {% if mode == 'Drag & Drop' %}selected{% endif %}>Drag & Drop</option>
+                        <option value="MCQ Challenge" {% if mode == 'MCQ Challenge' %}selected{% endif %}>MCQ Challenge</option>
+                        <option value="Fill in the Blanks" {% if mode == 'Fill in the Blanks' %}selected{% endif %}>Fill in the Blanks</option>
+                        <option value="Code Arrangement" {% if mode == 'Code Arrangement' %}selected{% endif %}>Code Arrangement</option>
+                        <option value="Syntax Validator" {% if mode == 'Syntax Validator' %}selected{% endif %}>Syntax Validator</option>
+                        <option value="Debug the Code" {% if mode == 'Debug the Code' %}selected{% endif %}>Debug the Code</option>
+                        <option value="Predict the Output" {% if mode == 'Predict the Output' %}selected{% endif %}>Predict the Output</option>
+                    </select>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 5px;">
+                    <label>Difficulty:</label>
+                    <select name="diff" class="custom-select" style="width:140px;">
+                        <option value="Beginner" {% if diff == 'Beginner' %}selected{% endif %}>Beginner</option>
+                        <option value="Intermediate" {% if diff == 'Intermediate' %}selected{% endif %}>Intermediate</option>
+                        <option value="Advanced" {% if diff == 'Advanced' %}selected{% endif %}>Advanced</option>
+                    </select>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 5px;">
+                    <label>Level:</label>
+                    <select name="level" class="custom-select" style="width:100px;">
+                        <option value="1" {% if level == '1' %}selected{% endif %}>1</option>
+                        <option value="2" {% if level == '2' %}selected{% endif %}>2</option>
+                        <option value="3" {% if level == '3' %}selected{% endif %}>3</option>
+                        <option value="4" {% if level == '4' %}selected{% endif %}>4</option>
+                        <option value="Master" {% if level == 'Master' %}selected{% endif %}>Master</option>
+                    </select>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 5px; justify-content: flex-end; height: 100%;">
+                    <button type="submit" class="btn-action btn-load" style="margin-top: 26px;">Load Questions</button>
+                </div>
+            </div>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 15px;">
+                Examples: Language=Python, SQL, Java | Mode=Drag & Drop, MCQ Challenge, Fill in the Blanks | Difficulty=Beginner, Intermediate, Advanced | Level=1, 2, 3, Master
+            </p>
+        </form>
+    </div>
+
+    <h2 style="font-family: var(--font-heading); color: white; margin-bottom: 20px; font-size: 1.5rem;">
+        Questions Found ({{ questions|length }})
+    </h2>
+    
+    {% for q in questions %}
+    <div class="q-container">
+        <h3 style="color: var(--accent);">Question #{{ loop.index }}</h3>
+        <div style="color: var(--text-primary); margin-bottom: 15px; font-size: 1.1rem;">
+            {{ q.get('question', 'No question text') }}
+        </div>
+        
+        <form method="POST" action="/admin/questions/update">
+            <input type="hidden" name="lang" value="{{ lang }}">
+            <input type="hidden" name="mode" value="{{ mode }}">
+            <input type="hidden" name="diff" value="{{ diff }}">
+            <input type="hidden" name="level" value="{{ level }}">
+            <input type="hidden" name="idx" value="{{ loop.index0 }}">
+            
+            <textarea name="q_json" spellcheck="false">{{ json.dumps(q, indent=2) }}</textarea>
+            
+            <div style="margin-top: 15px; display: flex; gap: 15px;">
+                <button type="submit" name="action" value="edit" class="btn-action btn-save">💾 Save Changes</button>
+                <button type="submit" name="action" value="delete" class="btn-action btn-delete" onclick="return confirm('Are you sure you want to permanently delete this question?');">🗑️ Delete</button>
+            </div>
+        </form>
+    </div>
+    {% endfor %}
+
+    <!-- Add New Question -->
+    <div class="q-container" style="border: 2px dashed var(--accent); background: rgba(6, 182, 212, 0.05); margin-top: 40px;">
+        <h3>➕ Add New Question to this Category</h3>
+        <form method="POST" action="/admin/questions/update">
+            <input type="hidden" name="lang" value="{{ lang }}">
+            <input type="hidden" name="mode" value="{{ mode }}">
+            <input type="hidden" name="diff" value="{{ diff }}">
+            <input type="hidden" name="level" value="{{ level }}">
+            <input type="hidden" name="action" value="add">
+            
+            <textarea name="q_json" spellcheck="false">{
+  "type": "mcq",
+  "question": "Enter your new question here...",
+  "options": ["Option A", "Option B", "Option C", "Option D"],
+  "correct_answer": "Option A",
+  "hint1": "First hint goes here",
+  "hint2": "Second hint goes here",
+  "explanation": "Detailed explanation of why Option A is correct."
+}</textarea>
+            <div style="margin-top: 15px;">
+                <button type="submit" class="btn-action btn-add">🚀 Inject Question</button>
+            </div>
+        </form>
+    </div>
+    
+    <div style="height: 50px;"></div>
+
+</div>
+
+</body>
+</html>

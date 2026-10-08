@@ -14,7 +14,7 @@
             margin-top: 30px;
         }
         .level-card {
-            background: rgba(255, 255, 255, 0.9);
+            background: var(--bg-card);
             border: 1px solid var(--border-glass);
             border-radius: var(--radius-lg);
             padding: 30px 22px;
@@ -28,7 +28,7 @@
         }
         .level-card:hover {
             transform: translateY(-7px);
-            background: rgba(255, 255, 255, 1);
+            background: var(--bg-card-hover);
             box-shadow: 0 16px 36px -10px var(--primary-glow);
             border-color: rgba(99, 102, 241, 0.5);
         }
@@ -49,7 +49,7 @@
         }
         .master-card {
             grid-column: 1 / -1;
-            background: radial-gradient(circle at center, rgba(245, 158, 11, 0.12) 0%, rgba(255, 255, 255, 0.9) 100%);
+            background: radial-gradient(circle at center, rgba(245, 158, 11, 0.12) 0%, var(--bg-card) 100%);
             border: 2px solid rgba(245, 158, 11, 0.45);
             margin-top: 10px;
         }

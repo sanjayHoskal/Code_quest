@@ -16,6 +16,10 @@ def load_question_bank():
     with open('questions.json', 'r', encoding='utf-8') as f:
         return json.load(f)
 
+def save_question_bank():
+    with open('questions.json', 'w', encoding='utf-8') as f:
+        json.dump(question_bank, f, indent=2)
+
 question_bank = load_question_bank()
 
 def normalize_language(lang):
@@ -28,6 +32,8 @@ def normalize_language(lang):
         return "Python"
     elif s.lower() == "java":
         return "Java"
+    elif s.lower() == "aiml":
+        return "AIML"
     return s
 
 def normalize_level(level_str):
@@ -252,6 +258,74 @@ def make_admin(user_id):
         db.session.commit()
         flash(f"User {user.username} is now an admin.", "success")
     return redirect(url_for("admin_dashboard"))
+
+@app.route("/admin/delete_user/<int:user_id>", methods=["POST"])
+@admin_required
+def delete_user(user_id):
+    user = db.session.get(User, user_id)
+    if user:
+        # Optional: delete their scores too
+        Score.query.filter_by(player_name=user.username).delete()
+        db.session.delete(user)
+        db.session.commit()
+        flash(f"User {user.username} has been deleted.", "success")
+    return redirect(url_for("admin_dashboard"))
+
+@app.route("/admin/delete_score/<int:score_id>", methods=["POST"])
+@admin_required
+def delete_score(score_id):
+    score = db.session.get(Score, score_id)
+    if score:
+        db.session.delete(score)
+        db.session.commit()
+        flash("Score entry deleted successfully.", "success")
+    return redirect(url_for("admin_dashboard"))
+
+@app.route("/admin/questions", methods=["GET"])
+@admin_required
+def admin_questions():
+    lang = request.args.get('lang', 'Python')
+    mode = request.args.get('mode', 'MCQ Challenge')
+    diff = request.args.get('diff', 'Beginner')
+    level = request.args.get('level', '1')
+    
+    questions = question_bank.get(lang, {}).get(mode, {}).get(diff, {}).get(level, [])
+    
+    return render_template("admin_questions.html", lang=lang, mode=mode, diff=diff, level=level, questions=questions, json=json)
+
+@app.route("/admin/questions/update", methods=["POST"])
+@admin_required
+def admin_questions_update():
+    lang = request.form.get('lang', 'Python')
+    mode = request.form.get('mode', 'MCQ Challenge')
+    diff = request.form.get('diff', 'Beginner')
+    level = request.form.get('level', '1')
+    action = request.form.get('action')
+    idx = int(request.form.get('idx', -1))
+    
+    qlist = question_bank.setdefault(lang, {}).setdefault(mode, {}).setdefault(diff, {}).setdefault(level, [])
+    
+    if action == 'delete':
+        if 0 <= idx < len(qlist):
+            qlist.pop(idx)
+            save_question_bank()
+            flash("Question deleted.", "success")
+    elif action in ['edit', 'add']:
+        q_data = request.form.get('q_json')
+        try:
+            parsed = json.loads(q_data)
+            if action == 'edit' and 0 <= idx < len(qlist):
+                qlist[idx] = parsed
+                flash("Question updated.", "success")
+            else:
+                qlist.append(parsed)
+                flash("Question added.", "success")
+            save_question_bank()
+        except Exception as e:
+            flash(f"Invalid JSON format: {e}", "danger")
+            
+    return redirect(url_for('admin_questions', lang=lang, mode=mode, diff=diff, level=level))
+
 
 
 # =========================================================
@@ -511,6 +585,22 @@ def submit_score():
         user = db.session.get(User, session['user_id'])
         if user:
             user.total_xp += points
+
+    # Automatic Level Unlocking
+    challenge_number = data.get("challenge_number")
+    if challenge_number == 3:
+        level = data.get("level")
+        language = data.get("language")
+        game_mode = data.get("game_mode")
+        difficulty = data.get("difficulty")
+        if all([level, language, game_mode, difficulty]):
+            unlock_key = f"{language}_{game_mode}_{difficulty}_unlocked"
+            current_unlocked = session.get(unlock_key, 1)
+            req_lvl = 4 if str(level).lower() == 'master' else int(level)
+            next_lvl = req_lvl + 1
+            if next_lvl > current_unlocked and next_lvl <= 4:
+                session[unlock_key] = next_lvl
+                session.modified = True
 
     db.session.commit()
     

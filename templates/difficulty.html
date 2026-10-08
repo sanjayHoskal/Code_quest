@@ -14,7 +14,7 @@
             margin-top: 30px;
         }
         .diff-card {
-            background: rgba(255, 255, 255, 0.9);
+            background: var(--bg-card);
             border: 1px solid var(--border-glass);
             border-radius: var(--radius-lg);
             padding: 35px 25px;
@@ -28,7 +28,7 @@
         }
         .diff-card:hover {
             transform: translateY(-8px);
-            background: rgba(255, 255, 255, 1);
+            background: var(--bg-card-hover);
         }
         .card-beginner:hover {
             border-color: rgba(16, 185, 129, 0.5);
@@ -41,6 +41,10 @@
         .card-advanced:hover {
             border-color: rgba(239, 68, 68, 0.5);
             box-shadow: 0 16px 36px -10px rgba(239, 68, 68, 0.4);
+        }
+        .card-pro:hover {
+            border-color: rgba(139, 92, 246, 0.5);
+            box-shadow: 0 16px 36px -10px rgba(139, 92, 246, 0.4);
         }
         .diff-icon {
             font-size: 48px;
@@ -163,6 +167,26 @@
                     <input type="hidden" name="difficulty" value="Advanced">
                     <button type="submit" class="btn-primary" style="background: linear-gradient(135deg, #ef4444, #b91c1c);">
                         Start Advanced ➔
+                    </button>
+                </form>
+            </div>
+
+            <!-- Pro -->
+            <div class="diff-card card-pro">
+                <div>
+                    <span class="diff-icon">💎</span>
+                    <h3 style="font-size: 24px; margin-bottom: 8px; color: #a78bfa;">Pro</h3>
+                    <div class="metric-pill">⭐ +50 XP per Quest</div>
+                    <p style="color: var(--text-secondary); font-size: 14px; line-height: 1.6; margin-bottom: 25px;">
+                        The ultimate challenge. Ultra-optimized code, obscure edge cases, and high-level architectural constraints.
+                    </p>
+                </div>
+                <form action="/level" method="POST">
+                    <input type="hidden" name="language" value="{{ language }}">
+                    <input type="hidden" name="game_mode" value="{{ game_mode }}">
+                    <input type="hidden" name="difficulty" value="Pro">
+                    <button type="submit" class="btn-primary" style="background: linear-gradient(135deg, #8b5cf6, #6d28d9);">
+                        Start Pro ➔
                     </button>
                 </form>
             </div>

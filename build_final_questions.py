@@ -4,6 +4,7 @@ import json
 from generate_python_curriculum import generate_python
 from generate_java_curriculum import generate_java
 from generate_sql_curriculum import generate_sql
+from generate_aiml_curriculum import generate_aiml
 
 def main():
     print("Generating Python curriculum...")
@@ -13,18 +14,37 @@ def main():
     print("Generating SQL curriculum...")
     sql = generate_sql()
 
+    print("Generating AIML curriculum...")
+    aiml = generate_aiml()
+
     database = {
         "Python": py,
         "Java": java,
-        "SQL": sql
+        "SQL": sql,
+        "AIML": aiml
     }
 
     # Validation
     total_questions = 0
-    LANGUAGES = ["Python", "Java", "SQL"]
+    import copy
+    
+    LANGUAGES = ["Python", "Java", "SQL", "AIML"]
     MODES = ["Drag & Drop", "Syntax Validator", "Code Arrangement", "MCQ Challenge", "Debug the Code", "Predict the Output", "Fill in the Blanks"]
-    DIFFS = ["Beginner", "Intermediate", "Advanced"]
+    DIFFS = ["Beginner", "Intermediate", "Advanced", "Pro"]
     LEVELS = ["1", "2", "3", "4"]
+
+    # Auto-generate Pro difficulty by cloning Advanced
+    for lang in LANGUAGES:
+        for mode in MODES:
+            database[lang][mode]["Pro"] = {}
+            for lvl in LEVELS:
+                pro_questions = []
+                for q in database[lang][mode]["Advanced"][lvl]:
+                    q_pro = copy.deepcopy(q)
+                    q_pro["question"] = "PRO: " + q_pro["question"]
+                    q_pro["hint1"] = "Think like a senior engineer."
+                    pro_questions.append(q_pro)
+                database[lang][mode]["Pro"][lvl] = pro_questions
 
     for lang in LANGUAGES:
         for mode in MODES:

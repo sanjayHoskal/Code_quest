@@ -184,7 +184,8 @@ def test_challenge_rendering(client):
         'game_mode': 'Predict the Output',
         'difficulty': 'Intermediate',
         'level': '2',
-        'challenge': '1'
+        'challenge': '1',
+        'unlock': 'true'
     })
     assert resp_sql.status_code == 200
     assert b'predictInput' in resp_sql.data
@@ -196,7 +197,8 @@ def test_challenge_rendering(client):
         'game_mode': 'Debug the Code',
         'difficulty': 'Advanced',
         'level': 'Master',
-        'challenge': '1'
+        'challenge': '1',
+        'unlock': 'true'
     })
     assert resp_master.status_code == 200
     assert b'Master Challenge' in resp_master.data
