@@ -1,5 +1,12 @@
 # CodeQuest – Interactive Programming Quest Platform
 
+[![Live App](https://img.shields.io/badge/Demo-Live%20on%20Render-success?style=for-the-badge&logo=render)](https://code-quest-924f.onrender.com/)
+[![GitHub Repo](https://img.shields.io/badge/GitHub-Repository-blue?style=for-the-badge&logo=github)](https://github.com/sanjayHoskal/Code_quest)
+[![Python](https://img.shields.io/badge/Python-3.11+-yellow?style=for-the-badge&logo=python)](https://python.org)
+[![Flask](https://img.shields.io/badge/Flask-3.x-lightgrey?style=for-the-badge&logo=flask)](https://flask.palletsprojects.com/)
+
+> 🎮 **Live Web Application:** **[https://code-quest-924f.onrender.com/](https://code-quest-924f.onrender.com/)**
+
 ---
 
 ## 🚀 Overview
@@ -7,6 +14,17 @@
 **CodeQuest** is a Flask-based web application that turns learning programming into an engaging adventure game. Learners embark on *quests* (coding challenges) across multiple tracks—**Python**, **Java**, and **SQL**—and progress through levels, earn points, and climb leaderboards.
 
 The platform implements a massive pre-generated JSON question bank (`questions.json`) containing over 45,000 unique programming challenges. It offers instant feedback on submissions, a beautiful dark-mode glassmorphic user interface, and a robust built-in admin console for live content management.
+
+---
+
+## 🌐 Live Deployment
+
+The application is deployed live in production:
+
+- **Public URL**: [https://code-quest-924f.onrender.com/](https://code-quest-924f.onrender.com/)
+- **Hosting Platform**: Render Cloud Web Service
+- **WSGI Server**: Gunicorn (`gunicorn app:app`)
+- **Continuous Deployment**: Linked directly to GitHub (`main` branch)
 
 ---
 
@@ -28,6 +46,8 @@ The platform implements a massive pre-generated JSON question bank (`questions.j
 ## 🛠️ Technology Stack
 
 - **Backend**: Python 3.11, **Flask**
+- **WSGI Production Server**: **Gunicorn**
+- **Hosting**: **Render**
 - **Database**: SQLite (`scores.db` - automatically managed by SQLAlchemy)
 - **Data Storage**: `questions.json` for all educational content logic.
 - **Frontend**: HTML5, CSS3 (Custom variables, Glassmorphism, CSS Grid/Flexbox), Jinja2 Templating
@@ -41,6 +61,7 @@ The platform implements a massive pre-generated JSON question bank (`questions.j
 game_app/
 │   app.py                # Main Flask application and all routing logic
 │   questions.json        # 1.9MB+ JSON database of all programming challenges
+│   Procfile              # Cloud WSGI deployment entry point (gunicorn app:app)
 │   test_app.py           # Pytest test suite ensuring app integrity
 │   requirements.txt      # Python dependencies
 │   README.md             # ← **this file**
