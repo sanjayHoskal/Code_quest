@@ -62,6 +62,9 @@ class Score(db.Model):
     score = db.Column(db.Integer, default=0)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
 
+with app.app_context():
+    db.create_all()
+
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
